@@ -1,10 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+*.egg-info/
+dist/
+build/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# Data files
+*.csv
+*.dat
+*.db
+*.sqlite
+
 # Word documents
 *.doc
 *.docx
 ~$*.doc*
 
-# Research papers
-.reasearch paper.docx
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
-# Dataset
-*.csv
+# OS
+.DS_Store
+Thumbs.db
