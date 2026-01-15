@@ -1,0 +1,7 @@
+# Word documents
+*.doc
+*.docx
+~$*.doc*
+
+# Research papers
+.reasearch paper.docx
