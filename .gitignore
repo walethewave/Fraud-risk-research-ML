@@ -5,3 +5,6 @@
 
 # Research papers
 .reasearch paper.docx
+
+# Dataset
+*.csv

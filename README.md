@@ -1,189 +1,149 @@
-# NIBSS Fraud Detection Research Project
+# Financial Fraud Research and Machine Learning Study  
+**Behavioral, Temporal, and Risk-Based Analysis of Large-Scale Payment Transactions**
 
-## Overview
-This research project analyzes a comprehensive fraud detection dataset from the Nigeria Inter-Bank Settlement System (NIBSS). The dataset contains **1,000,000 transactions** with **38 features** designed to identify fraudulent financial activities across various banking channels.
+## Project Status
+This repository documents an **ongoing research and machine learning investigation** into financial fraud dynamics within large-scale interbank payment systems.  
+The work is intentionally incomplete. Findings, models, and interpretations will continue to evolve as analysis deepens.
 
-## Dataset Information
-- **File**: `nibss_fraud_dataset.csv`
-- **Total Records**: 1,000,000 transactions
-- **Fraudulent Transactions**: 3,000 (0.3% fraud rate)
-- **Total Features**: 38 columns
-- **Memory Size**: ~276.6 MB
-
-## Column Descriptions
-
-### Basic Transaction Information
-
-| Column | Type | Description |
-|--------|------|-------------|
-| **transaction_id** | object | Unique identifier for each transaction |
-| **customer_id** | object | Unique identifier for each customer |
-| **timestamp** | object | Date and time when the transaction occurred |
-| **amount** | float64 | Transaction amount in Nigerian Naira (₦) |
-
-### Transaction Context
-
-| Column | Type | Description |
-|--------|------|-------------|
-| **channel** | object | Transaction channel (e.g., ATM, POS, Mobile, Internet Banking, USSD) |
-| **merchant_category** | object | Type of merchant or business where transaction occurred |
-| **bank** | object | Name of the bank processing the transaction |
-| **location** | object | Geographic location where transaction was initiated |
-
-### Customer Demographics
-
-| Column | Type | Description |
-|--------|------|-------------|
-| **age_group** | object | Age bracket of the customer (e.g., 18-25, 26-35, 36-45, etc.) |
-
-### Temporal Features
-
-| Column | Type | Description |
-|--------|------|-------------|
-| **hour** | int64 | Hour of the day (0-23) when transaction occurred |
-| **day_of_week** | int64 | Day of the week (0=Monday, 6=Sunday) |
-| **month** | int64 | Month of the year (1-12) |
-| **is_weekend** | bool | Whether transaction occurred on weekend (True/False) |
-| **is_peak_hour** | bool | Whether transaction occurred during peak banking hours (True/False) |
-
-### Short-term Behavioral Features (24 hours)
-
-| Column | Type | Description |
-|--------|------|-------------|
-| **tx_count_24h** | float64 | Number of transactions by this customer in the last 24 hours |
-| **amount_sum_24h** | float64 | Total amount transacted by customer in the last 24 hours |
-
-### Medium-term Behavioral Features (7 days)
-
-| Column | Type | Description |
-|--------|------|-------------|
-| **amount_mean_7d** | float64 | Average transaction amount for this customer over the last 7 days |
-| **amount_std_7d** | float64 | Standard deviation of transaction amounts over the last 7 days (measures variability) |
-
-### Long-term Behavioral Features (Historical)
-
-| Column | Type | Description |
-|--------|------|-------------|
-| **tx_count_total** | int64 | Total number of transactions by this customer (all-time) |
-| **amount_mean_total** | float64 | Average transaction amount for this customer (all-time) |
-| **amount_std_total** | float64 | Standard deviation of all transaction amounts (all-time) |
-
-### Customer Behavioral Patterns
-
-| Column | Type | Description |
-|--------|------|-------------|
-| **channel_diversity** | int64 | Number of different channels used by this customer |
-| **location_diversity** | int64 | Number of different locations this customer has transacted from |
-| **amount_vs_mean_ratio** | float64 | Ratio of current transaction amount to customer's mean amount (outlier detection) |
-| **online_channel_ratio** | float64 | Proportion of customer's transactions through online channels |
-
-### Target Variable
-
-| Column | Type | Description |
-|--------|------|-------------|
-| **is_fraud** | int64 | **Target variable**: 1 = Fraudulent transaction, 0 = Legitimate transaction |
-| **fraud_technique** | object | Type of fraud technique used (only populated for fraudulent transactions, 3,000 non-null values) |
-
-### Engineered Features - Cyclical Time Encoding
-
-These features use sine and cosine transformations to preserve cyclical nature of time:
-
-| Column | Type | Description |
-|--------|------|-------------|
-| **hour_sin** | float64 | Sine transformation of hour (captures cyclical pattern: hour 23 is close to hour 0) |
-| **hour_cos** | float64 | Cosine transformation of hour |
-| **day_sin** | float64 | Sine transformation of day of week |
-| **day_cos** | float64 | Cosine transformation of day of week |
-| **month_sin** | float64 | Sine transformation of month |
-| **month_cos** | float64 | Cosine transformation of month |
-
-### Engineered Features - Transaction Characteristics
-
-| Column | Type | Description |
-|--------|------|-------------|
-| **amount_log** | float64 | Natural logarithm of transaction amount (normalizes skewed distribution) |
-| **amount_rounded** | int64 | Transaction amount rounded to nearest whole number |
-
-### Risk Scoring Features
-
-| Column | Type | Description |
-|--------|------|-------------|
-| **velocity_score** | float64 | Measures the speed/frequency of transactions (high velocity can indicate fraud) |
-| **merchant_risk_score** | float64 | Risk score assigned to the merchant category |
-| **composite_risk** | float64 | Combined risk score aggregating multiple risk factors |
-
-## Research Objectives
-
-This dataset can be used for:
-- **Fraud Detection Models**: Building machine learning models to identify fraudulent transactions
-- **Pattern Analysis**: Understanding behavioral patterns that distinguish fraud from legitimate transactions
-- **Feature Importance**: Identifying which features are most predictive of fraud
-- **Temporal Analysis**: Analyzing time-based fraud patterns
-- **Channel Security**: Evaluating fraud rates across different banking channels
-- **Customer Profiling**: Understanding customer segments most vulnerable to fraud
-
-## Key Insights
-
-### Class Imbalance
-- Legitimate transactions: 997,000 (99.7%)
-- Fraudulent transactions: 3,000 (0.3%)
-- **Note**: This severe class imbalance requires special handling (e.g., SMOTE, class weights, stratified sampling)
-
-### Data Quality
-- All 38 columns have 1,000,000 non-null values except `fraud_technique`
-- `fraud_technique` only has values for the 3,000 fraudulent transactions
-- No missing data in core features
-
-## Getting Started
-
-### Requirements
-```python
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler
-```
-
-### Loading the Data
-```python
-data = pd.read_csv('nibss_fraud_dataset.csv')
-print(data.shape)
-print(data.info())
-```
-
-## Suggested Analysis Approaches
-
-1. **Exploratory Data Analysis (EDA)**
-   - Distribution analysis of transaction amounts
-   - Temporal patterns (hourly, daily, monthly)
-   - Channel-wise fraud rates
-   - Customer behavior analysis
-
-2. **Feature Engineering**
-   - Create interaction features
-   - Aggregate risk scores
-   - Normalize numerical features
-
-3. **Model Development**
-   - Handle class imbalance (SMOTE, undersampling, class weights)
-   - Try multiple algorithms (Random Forest, XGBoost, Neural Networks)
-   - Use appropriate metrics (F1-score, Precision-Recall, AUC-ROC)
-
-4. **Model Evaluation**
-   - Focus on recall (catching fraud) vs precision (avoiding false alarms)
-   - Analyze false positives and false negatives
-   - Feature importance analysis
-
-## License & Usage
-
-This is a research dataset for fraud detection analysis. Ensure compliance with data protection regulations when using financial data.
-
-## Contact
-
-For questions or collaboration on this research project, please refer to the project documentation.
+This repo reflects how long-horizon research is conducted inside mature AI and risk organizations. Incremental insight beats premature conclusions.
 
 ---
-*Last Updated: January 2026*
-# Fraud-risk-research-ML
+
+## Research Motivation
+Fraud does not occur randomly.  
+Fraud adapts to human behavior, system constraints, monitoring gaps, and response latency.
+
+This project studies fraud as a **behavioral system**, not a binary classification problem.
+
+The primary goal is to understand:
+- Why fraud risk increases at specific times
+- How transaction velocity signals intent
+- Where channel design creates asymmetric risk
+- When amount size shifts fraudster behavior
+- Whether fraud differences arise from banks or from shared infrastructure
+
+---
+
+## Dataset Overview
+- **Transactions**: 1,000,000  
+- **Fraud Cases**: 3,000  
+- **Observed Fraud Rate**: 0.30 percent  
+- **Features**: 38 engineered and raw variables  
+- **Banks**: Multiple Nigerian commercial banks  
+- **Channels**: ATM, POS, Mobile, Web, E-Commerce, Internet Banking  
+- **Currency**: Nigerian Naira ₦  
+- **Dataset Link**: [Download CSV from Kaggle](https://www.kaggle.com/datasets/hendurhance/nibsss-fraud-dataset?select=nibss_fraud_dataset.csv)  
+
+The dataset mirrors real production constraints.
+- Extreme class imbalance
+- Overlapping risk signals
+- No single dominant predictor
+- Fraud hidden inside normal behavior
+
+---
+
+## Feature Design Philosophy
+Features reflect **behavioral deviation**, not static thresholds.
+
+### Core Groups
+- Transaction context and metadata
+- Temporal signals with cyclical encoding
+- Short, medium, and long-horizon customer behavior
+- Channel usage diversity
+- Location variability
+- Velocity and composite risk indicators
+
+Each feature exists to answer one question:
+How abnormal is this transaction relative to the actor behind it.
+
+---
+
+## Research Axes
+Current work focuses on five intersecting axes.
+
+### 1. Time-Based Risk
+- Hourly fraud rate shifts
+- Night versus business-hour behavior
+- Velocity escalation during low-response windows
+
+### 2. Channel Behavior
+- Physical versus digital risk asymmetry
+- Automated fraud signatures on mobile
+- Cautious fraud behavior on monitored channels
+
+### 3. Velocity Dynamics
+- Legitimate versus fraudulent transaction speed
+- Channel-specific velocity deviations
+- Time-constrained fraud execution patterns
+
+### 4. Amount Sensitivity
+- Fraud amplification at higher ranges
+- Channel-dependent amount thresholds
+- Average fraudulent amount inflation across channels
+
+### 5. Bank and Location Interaction
+- Systemic versus institution-specific risk
+- Risk concentration at bank–location–channel intersections
+- Volatility as a stronger signal than raw rate
+
+---
+
+## Key Interim Observations
+These findings remain provisional and subject to revision.
+
+- Fraud velocity increases sharply between midnight and early morning hours
+- Mobile channels exhibit faster fraudulent velocity than legitimate usage
+- Fraudulent transactions consistently exceed legitimate amounts
+- Bank-level fraud rates remain tightly clustered, suggesting systemic exposure
+- Location risk emerges primarily through interaction effects, not isolation
+
+No single factor explains fraud. Patterns emerge only when dimensions intersect.
+
+---
+
+## Machine Learning Direction
+Modeling follows research insight, not the reverse.
+
+Planned approaches include:
+- Tree-based and boosting models
+- Cost-sensitive optimization
+- Precision–recall driven evaluation
+- Error surface analysis rather than headline accuracy
+- Hybrid rule plus ML reasoning
+
+Models serve the research. Research does not serve the model.
+
+
+
+```
+
+Structure will evolve alongside the research.
+
+---
+
+## Research Ethos
+This repository favors:
+- Clear assumptions over polished narratives
+- Measured interpretation over speculation
+- Systems thinking over single-metric optimization
+
+The intent is not to present a finished product.  
+The intent is to document how fraud understanding is built.
+
+---
+
+## Intended Audience
+- Fraud and risk analysts
+- Data scientists working with imbalanced systems
+- ML engineers building decision pipelines
+- Researchers studying adversarial behavior in financial systems
+
+
+
+## License
+Research and educational use only.
+
+
+**Fraud adapts faster than rules.  
+Understanding behavior slows it down.**
+
