@@ -37,3 +37,9 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+
+# Large data files
+*.pkl
+*.pickle
+nibss_fraud_dataset.csv
+data_clean.pkl
