@@ -20,10 +20,7 @@ I'm approaching this like the adversarial problem it actually is:
 
 ---
 
-## Dataset Overview
-- **Transactions**: 1,000,000  
-- **Fraud Cases**: 3,000  
-- *The Data
+## The Data
 **1 million transactions. 3,000 fraudulent. That's 0.3% fraud rate.**
 
 This is the class imbalance you deal with in production. No synthetic oversampling tricks to make the problem easier. No balanced datasets. Just the brutal reality that fraud is rare, expensive when missed, and devastating when you cry wolf too often.
@@ -38,7 +35,13 @@ This is the class imbalance you deal with in production. No synthetic oversampli
 **The Challenge:**
 - 0.3% positive class (good luck with accuracy as a metric)
 - Fraud hides inside legitimate patterns
-- False posEngineering (The Hard Part)
+- False positives destroy user trust
+- False negatives cost real money
+- Models must explain decisions (regulatory requirement + trust)
+
+---
+
+## Feature Engineering (The Hard Part)
 Features aren't data columns. Features are hypotheses about fraud behavior encoded as numbers.
 
 **What I Built:**
@@ -48,45 +51,12 @@ Features aren't data columns. Features are hypotheses about fraud behavior encod
 - **Risk composites** - Weighted combinations of amount deviation, velocity, and diversity
 - **One-hot bank encodings** - Bank-specific fraud patterns (using int8 for memory efficiency)
 
-**What I Dropped (45 features):**
+**What I Dropped (45 features):**  
 Started with 62 features. Aggressively pruned low-signal noise. Kept 17 predictors that actually matter. More features ≠ better models. More features = more ways to overfit.
 
-**Engineering Philosophy:**
+**Engineering Philosophy:**  
 Every feature answers: *"How weird is this transaction for this user?"*  
 Not "Is this transaction big?" but "Is this bigger than what this user normally does?"
-
-Each feature exists to answer one question:
-How abnormal is this transaction relative to the actor behind it.
-
----
-
-## Research Axes
-Current work focuses on five intersecting axes.
-
-### 1. Time-Based Risk
-- Hourly fraud rate shifts
-- Night versus business-hour behavior
-- Velocity escalation during low-response windows
-
-### 2. Channel Behavior
-- Physical versus digital risk asymmetry
-- Automated fraud signatures on mobile
-- Cautious fraud behavior on monitored channels
-
-### 3. Velocity Dynamics
-- Legitimate versus fraudulent transaction speed
-- Channel-specific velocity deviations
-- Time-constrained fraud execution patterns
-
-### 4. Amount Sensitivity
-- Fraud amplification at higher ranges
-- Channel-dependent amount thresholds
-- Average fraudulent amount inflation across channels
-
-### 5. Bank and Location Interaction
-- Systemic versus institution-specific risk
-- Risk concentration at bank–location–channel intersections
-- Volatility as a stronger signal than raw rate
 
 ---
 
@@ -104,7 +74,10 @@ Current work focuses on five intersecting axes.
 - Location alone is weak. Location + velocity + unusual channel = strong signal
 - More transaction history doesn't always help (fraudsters build legitimacy first)
 - The best fraud indicator is "doing something you've never done before, quickly"
-odels & Results
+
+---
+
+## Models & Results
 
 ### Baseline: Logistic Regression
 **AUC-ROC: 0.7020**  
@@ -117,7 +90,62 @@ Started here because you need to know what "simple" performance looks like. Logi
 - Unusable in production
 
 **What it taught us:**  
-Linplaintext
+Linear models struggle with fraud's non-linear decision boundaries. Time to bring in the trees.
+
+---
+
+### Production Model: Random Forest
+**AUC-ROC: 0.8223 (+17% improvement)**
+
+**Configuration:**
+```python
+RandomForestClassifier(
+    n_estimators=100,
+    max_depth=10,
+    min_samples_split=100,
+    min_samples_leaf=50,
+    class_weight='balanced',  # Critical for imbalanced data
+    n_jobs=-1
+)
+```
+
+**Performance:**
+- **Recall: 64%** - Catches nearly 2 out of 3 fraud cases
+- **AUC-ROC: 0.8223** - "Good" discrimination (industry-standard metric)
+- **384 true positives** vs LR's 325 (+59 fraud cases caught)
+- Trade-off: 3,125 more false positives, but catching more fraud
+
+**Why Random Forest?**
+1. Handles non-linear patterns (fraud doesn't follow straight lines)
+2. Robust to feature scaling (no preprocessing needed)
+3. Built-in feature importance (interpretability matters)
+4. `class_weight='balanced'` handles the 0.3% imbalance
+5. Fast enough for 800K training samples
+
+---
+
+### Interpretability: SHAP Analysis
+Built SHAP (SHapley Additive exPlanations) analysis because "the model says so" doesn't fly with fraud analysts or regulators.
+
+**What SHAP revealed:**
+- **Transaction amount** dominates (52% importance) - Size matters most
+- **Composite risk score** second (18%) - Our engineered feature works
+- **Month and temporal features** (9%) - Seasonal fraud patterns confirmed
+- **Bank encodings** matter differently - Institution-specific risk profiles
+
+**Visualization Suite:**
+- Summary plots (global feature impact)
+- Dependence plots (how feature values affect predictions)
+- Force plots (individual transaction explanations)
+- Waterfall plots (step-by-step decision breakdown)
+
+This isn't just model debugging. This is how you build trust with stakeholders who need to understand *why* a transaction got flagged.
+
+---
+
+## Repository Structure
+
+```plaintext
 fraud-detection/
 ├── logistic regression.ipynb    # Full pipeline: EDA → Preprocessing → Modeling → SHAP
 ├── data_clean.csv               # Engineered features (local only, not in git)
@@ -191,72 +219,16 @@ The hardest part isn't building a model that performs well. It's building a mode
 - ML engineers building fraud/risk systems in production
 - Data scientists dealing with extreme class imbalance
 - Anyone tired of overfitted Kaggle solutions and wanting to see real-world ML
-- Fraud analysts who need to understand how these models actually work metric)
-- **384 true positives** vs LR's 325 (+59 fraud cases caught)
-- Trade-off: 3,125 more false positives, but catching more fraud
+- Fraud analysts who need to understand how these models actually work
 
+---
+
+## License
 MIT License. Use it, learn from it, improve it. If you build something cool with this approach, I'd love to hear about it.
 
 ---
 
 **Remember:** Fraud detection isn't about catching every fraudster. It's about making fraud expensive enough that it's not worth the effort. Every model improvement is a small increase in the cost of attack. Keep raising the bar.
 
-*Built by someone who believes ML should be interpretable, production-ready, and honest about its limitations.he 0.3% imbalance
-5. Fast enough for 800K training samples
-
----
-
-### Interpretability: SHAP Analysis
-Built SHAP (SHapley Additive exPlanations) analysis because "the model says so" doesn't fly with fraud analysts or regulators.
-
-**What SHAP revealed:**
-- **Transaction amount** dominates (52% importance) - Size matters most
-- **Composite risk score** second (18%) - Our engineered feature works
-- **Month and temporal features** (9%) - Seasonal fraud patterns confirmed
-- **Bank encodings** matter differently - Institution-specific risk profiles
-
-**Visualization Suite:**
-- Summary plots (global feature impact)
-- Dependence plots (how feature values affect predictions)
-- Force plots (individual transaction explanations)
-- Waterfall plots (step-by-step decision breakdown)
-
-This isn't just model debugging. This is how you build trust with stakeholders who need to understand *why* a transaction got flagged
-- Hybrid rule plus ML reasoning
-
-Models serve the research. Research does not serve the model.
-
-
-
-```
-
-Structure will evolve alongside the research.
-
----
-
-## Research Ethos
-This repository favors:
-- Clear assumptions over polished narratives
-- Measured interpretation over speculation
-- Systems thinking over single-metric optimization
-
-The intent is not to present a finished product.  
-The intent is to document how fraud understanding is built.
-
----
-
-## Intended Audience
-- Fraud and risk analysts
-- Data scientists working with imbalanced systems
-- ML engineers building decision pipelines
-- Researchers studying adversarial behavior in financial systems
-
-
-
-## License
-Research and educational use only.
-
-
-**Fraud adapts faster than rules.  
-Understanding behavior slows it down.**
+*Built by someone who believes ML should be interpretable, production-ready, and honest about its limitations.*
 
