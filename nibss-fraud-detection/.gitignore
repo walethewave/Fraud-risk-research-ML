@@ -1,0 +1,13 @@
+# Ignore all data files inside raw and processed directories
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Ignore all trained model artifacts
+models/*
+!models/.gitkeep
+
+# Ignore all jupyter checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
