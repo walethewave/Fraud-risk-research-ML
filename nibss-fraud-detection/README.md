@@ -1,5 +1,5 @@
 # NIBSS Fraud Detection — AI-Powered Financial Crime Analysis
-**Author:** Afolabi Olawale Goodluck | **Institution:** QuCoon AI | **Lagos, Nigeria · 2025**
+**Author:** Afolabi Olawale Goodluck | **Institution:** QuCoon AI | **Lagos, Nigeria · 2026**
 
 ---
 
@@ -11,7 +11,7 @@ This project applies machine learning to detect fraudulent transactions in the N
 
 ## Dataset Citation
 
-> Owolabi, S. (2025). *NIBSS Fraud Dataset*. Kaggle. Licensed under CC BY-SA 4.0.  
+> Owolabi, S. (2026). *NIBSS Fraud Dataset*. Kaggle. Licensed under CC BY-SA 4.0.  
 > Retrieved from: https://www.kaggle.com/
 
 The dataset is a synthetic simulation of NIBSS (Nigeria Inter-Bank Settlement System) transactional data, comprising 1,000,000 records across 38 engineered features. Fraud cases represent 0.300% of all transactions (3,000 cases).
@@ -74,4 +74,4 @@ See `requirements.txt` for full dependency list. Key libraries:
 
 ---
 
-*Afolabi Olawale Goodluck · QuCoon AI · Lagos, Nigeria · 2025*
+*Afolabi Olawale Goodluck · QuCoon AI · Lagos, Nigeria · 2026*

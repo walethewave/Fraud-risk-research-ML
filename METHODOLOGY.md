@@ -2,12 +2,12 @@
 
 ## 3.1 Data Source and Description
 
-This study utilizes an anonymized transaction-level dataset from the Nigeria Inter-Bank Settlement System (NIBSS), representing digital payment activity across major Nigerian commercial banks. The dataset comprises **1,000,000 transaction records** captured during the 2025 calendar year, providing a comprehensive view of modern payment channel activity in the Nigerian financial ecosystem.
+This study utilizes an anonymized transaction-level dataset from the Nigeria Inter-Bank Settlement System (NIBSS), representing digital payment activity across major Nigerian commercial banks. The dataset comprises **1,000,000 transaction records** captured during the 2026 calendar year, providing a comprehensive view of modern payment channel activity in the Nigerian financial ecosystem.
 
 **Dataset Characteristics:**
 
 - **Data Provider:** Nigeria Inter-Bank Settlement System (NIBSS)
-- **Coverage Period:** January 2025 – December 2025
+- **Coverage Period:** January 2026 – December 2026
 - **Transaction Volume:** 1,000,000 records
 - **Fraud Cases:** 3,000 confirmed fraud incidents (0.3% prevalence rate)
 - **Geographic Scope:** Major commercial banks across Nigeria
