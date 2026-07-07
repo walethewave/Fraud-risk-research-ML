@@ -32,6 +32,16 @@ nibss-fraud-detection/
 │   └── .gitkeep                ← saved model artifacts go here
 ├── outputs/
 │   └── .gitkeep                ← plots, reports, exported visualisations
+├── explainability/              ← SHAP + Gemini fraud explanation pipeline
+│   ├── design.md                ← research question, prompt schema, metrics
+│   ├── compute_shap.py           ← offline SHAP values for the RF model
+│   ├── prompt_builder.py         ← builds the analyst-facing prompt
+│   ├── llm_client.py             ← Gemini client with model fallback chain
+│   ├── generate_explanations.py  ← batch-generates explanations (resumable)
+│   ├── evaluate.py               ← faithfulness + usefulness scoring
+│   ├── human_rating_template.py  ← exports blind human-rating sheet
+│   └── export_frontend_data.py   ← exports cases for the frontend below
+├── frontend/                    ← Next.js triage dashboard (see its README)
 ├── requirements.txt
 └── README.md
 ```

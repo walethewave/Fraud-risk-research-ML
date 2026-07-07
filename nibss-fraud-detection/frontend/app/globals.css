@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+:root {
+  --background: #08090c;
+  --surface: #0f1116;
+  --surface-raised: #14171f;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --foreground: #f2f3f5;
+  --muted: #9aa0ac;
+  --muted-2: #6b7280;
+
+  --accent-violet: #8b7cf6;
+  --accent-blue: #5eb3f6;
+  --accent-pink: #f68bd0;
+
+  --risk-high: #ff6b6b;
+  --risk-high-bg: rgba(255, 107, 107, 0.12);
+  --risk-medium: #f6b35e;
+  --risk-medium-bg: rgba(246, 179, 94, 0.12);
+  --risk-low: #5ed6a0;
+  --risk-low-bg: rgba(94, 214, 160, 0.12);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  border-color: var(--border-subtle);
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  position: relative;
+  min-height: 100%;
+}
+
+/* Ambient gradient glow, soft orbs behind the content */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(600px circle at 12% -10%, rgba(139, 124, 246, 0.16), transparent 60%),
+    radial-gradient(500px circle at 100% 10%, rgba(94, 179, 246, 0.12), transparent 55%),
+    radial-gradient(700px circle at 50% 120%, rgba(246, 139, 208, 0.08), transparent 60%);
+}
+
+.glass {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
+  border: 1px solid var(--border-subtle);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glass-raised {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--border-strong);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, var(--accent-violet), var(--accent-blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
