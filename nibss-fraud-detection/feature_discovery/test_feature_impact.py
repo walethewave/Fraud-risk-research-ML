@@ -28,7 +28,15 @@ FRAUD_LABEL = "is_fraud"
 DATA_PATH = PROJECT_ROOT / "data" / "processed" / "data_model_ready.pkl"
 RAW_DATA_PATH = PROJECT_ROOT / "data" / "raw" / "nibss_fraud_dataset.csv"
 PROPOSAL_PATH = HERE / "outputs" / "feature_proposal.json"
+LEAKAGE_CHECK_PATH = HERE / "outputs" / "leakage_check.json"
 RESULTS_PATH = HERE / "outputs" / "feature_impact_results.json"
+
+# amount_vs_mean_ratio is built on amount_mean_total, which leakage_check.py
+# confirmed is a customer-lifetime constant (includes transactions that
+# happen AFTER the one being scored) — not a genuine look-back window.
+# Excluded from the validated recommendation; kept here only so the
+# uncorrected comparison can still be reproduced for transparency.
+KNOWN_LEAKY_FEATURES = {"amount_vs_mean_ratio"}
 
 RF_PARAMS = dict(
     n_estimators=100,
@@ -77,8 +85,19 @@ def main():
     if not PROPOSAL_PATH.exists():
         raise FileNotFoundError(f"{PROPOSAL_PATH} not found — run propose_features.py first.")
     proposal = json.loads(PROPOSAL_PATH.read_text())
-    candidate_features = proposal["recommended_features"]
-    print(f"Testing candidate features: {candidate_features}")
+    all_candidates = proposal["recommended_features"]
+
+    excluded = [f for f in all_candidates if f in KNOWN_LEAKY_FEATURES]
+    candidate_features = [f for f in all_candidates if f not in KNOWN_LEAKY_FEATURES]
+    if excluded:
+        print(f"Excluding known-leaky feature(s) per leakage_check.py: {excluded}")
+    if not candidate_features:
+        raise RuntimeError(
+            "All LLM-recommended features were flagged as leaky — nothing "
+            "left to validate. Re-run propose_features.py or expand "
+            "CANDIDATE_COLUMNS in analyze_false_negatives.py."
+        )
+    print(f"Testing candidate features (leakage-checked): {candidate_features}")
 
     baseline_model = joblib.load(PROJECT_ROOT / "models" / "random_forest_fraud_model.pkl")
     baseline_feature_cols = list(baseline_model.feature_names_in_)
@@ -88,7 +107,7 @@ def main():
     print("\nTraining baseline model (17 features, re-trained fresh for a fair comparison)...")
     baseline_result = train_and_eval(df, baseline_feature_cols)
 
-    print("Training augmented model (17 + candidate features)...")
+    print("Training augmented model (17 + leakage-checked candidate features)...")
     augmented_feature_cols = baseline_feature_cols + candidate_features
     augmented_result = train_and_eval(df, augmented_feature_cols)
 
@@ -120,6 +139,7 @@ def main():
 
     RESULTS_PATH.write_text(json.dumps({
         "candidate_features": candidate_features,
+        "excluded_leaky_features": excluded,
         "baseline": baseline_result,
         "augmented": augmented_result,
         "auc_delta": auc_delta,

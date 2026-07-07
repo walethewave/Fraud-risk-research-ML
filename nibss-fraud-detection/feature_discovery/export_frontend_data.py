@@ -14,6 +14,7 @@ def main():
     fn_analysis = json.loads((OUTPUTS / "fn_analysis.json").read_text())
     proposal = json.loads((OUTPUTS / "feature_proposal.json").read_text())
     impact = json.loads((OUTPUTS / "feature_impact_results.json").read_text())
+    leakage = json.loads((OUTPUTS / "leakage_check.json").read_text())
 
     payload = {
         "falseNegativeAnalysis": {
@@ -38,6 +39,7 @@ def main():
         },
         "impact": {
             "candidateFeatures": impact["candidate_features"],
+            "excludedLeakyFeatures": impact.get("excluded_leaky_features", []),
             "baselineAuc": impact["baseline"]["auc"],
             "baselineRecall": impact["baseline"]["recall"],
             "baselineFalseNegatives": impact["baseline"]["n_false_negatives"],
@@ -49,6 +51,12 @@ def main():
             "nNewlyCaught": impact["n_newly_caught"],
             "nNewlyMissed": impact["n_newly_missed"],
             "verdict": impact["verdict"],
+        },
+        "leakageCheck": {
+            "leakyColumns": leakage["leaky_columns"],
+            "cleanColumns": leakage["clean_columns"],
+            "compositeRiskCorrelation": leakage["composite_risk_correlation"],
+            "conclusion": leakage["conclusion"],
         },
     }
 

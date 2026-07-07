@@ -23,6 +23,7 @@ export type DiscoveryData = {
   };
   impact: {
     candidateFeatures: string[];
+    excludedLeakyFeatures: string[];
     baselineAuc: number;
     baselineRecall: number;
     baselineFalseNegatives: number;
@@ -34,6 +35,12 @@ export type DiscoveryData = {
     nNewlyCaught: number;
     nNewlyMissed: number;
     verdict: "IMPROVED" | "NO MEANINGFUL CHANGE" | "WORSE";
+  };
+  leakageCheck: {
+    leakyColumns: string[];
+    cleanColumns: string[];
+    compositeRiskCorrelation: Record<string, number>;
+    conclusion: string;
   };
 };
 

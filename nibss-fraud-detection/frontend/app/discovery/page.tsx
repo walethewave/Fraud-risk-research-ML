@@ -12,7 +12,7 @@ const VERDICT_STYLE: Record<string, string> = {
 
 export default function DiscoveryPage() {
   const data = getDiscoveryData();
-  const { falseNegativeAnalysis, llmProposal, impact } = data;
+  const { falseNegativeAnalysis, llmProposal, impact, leakageCheck } = data;
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-6 py-12 sm:px-10">
@@ -66,9 +66,46 @@ export default function DiscoveryPage() {
         </pre>
       </section>
 
-      {/* Step 3 */}
+      {/* Step 3: leakage audit */}
+      <section className="glass-raised rounded-2xl border border-[--risk-medium]/20 p-6">
+        <StepHeader n={3} title="Leakage audit (before trusting the AUC gain)" />
+        <p className="mb-4 text-sm text-[--muted]">
+          A jump this size for z-scores this small deserved scrutiny before reporting
+          it. Checked each candidate feature&apos;s source column against a real
+          customer&apos;s transaction timeline: does it only reflect that
+          customer&apos;s <em>past</em> activity (safe), or does it include
+          transactions that happen after the one being scored (leaky)?
+        </p>
+        <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="rounded-xl bg-[--risk-low-bg] p-4 ring-1 ring-inset ring-[--risk-low]/25">
+            <div className="mb-1 text-xs font-medium text-[--risk-low]">Clean (look-back windows)</div>
+            <div className="text-sm text-[--foreground]">
+              {leakageCheck.cleanColumns.map(featureLabel).join(", ")}
+            </div>
+          </div>
+          <div className="rounded-xl bg-[--risk-high-bg] p-4 ring-1 ring-inset ring-[--risk-high]/25">
+            <div className="mb-1 text-xs font-medium text-[--risk-high]">Leaky (lifetime constant)</div>
+            <div className="text-sm text-[--foreground]">
+              {leakageCheck.leakyColumns.map(featureLabel).join(", ")}
+            </div>
+          </div>
+        </div>
+        <p className="text-sm text-[--muted]">
+          <code className="rounded bg-white/10 px-1.5 py-0.5 text-[--foreground]">amount_vs_mean_ratio</code>{" "}
+          inherits the leakage and was excluded from the validated test. Notably,{" "}
+          <code className="rounded bg-white/10 px-1.5 py-0.5 text-[--foreground]">composite_risk</code> — already
+          in the deployed model — correlates{" "}
+          <span className="text-[--foreground]">
+            {leakageCheck.compositeRiskCorrelation.amount_vs_mean_ratio?.toFixed(2)}
+          </span>{" "}
+          with the leaky ratio, meaning the original model has some diluted exposure to
+          this same issue already.
+        </p>
+      </section>
+
+      {/* Step 4 */}
       <section className="glass rounded-2xl p-6">
-        <StepHeader n={3} title="Does it actually move AUC?" />
+        <StepHeader n={4} title="Does the clean feature actually move AUC?" />
         <p className="mb-4 text-sm text-[--muted]">
           Retrained the identical Random Forest, same split, with vs. without{" "}
           {impact.candidateFeatures.map((f, i) => (
@@ -76,8 +113,8 @@ export default function DiscoveryPage() {
               {i > 0 && ", "}
               <span className="text-[--foreground]">{featureLabel(f)}</span>
             </span>
-          ))}
-          .
+          ))}{" "}
+          only — the leakage-checked, validated candidate.
         </p>
         <AucComparison impact={impact} />
         <div
@@ -90,14 +127,15 @@ export default function DiscoveryPage() {
 
       <section className="glass rounded-2xl p-6 text-sm text-[--muted]">
         <p>
-          The gain here is real but not from the features alone (each is near-random in
-          isolation, AUC ≈ 0.53) — it comes from an interaction with the existing 17
-          features. The baseline model has no customer-history baseline at all; the
-          winning feature answers &quot;is this unusual for this specific customer?&quot;,
-          a question the original 17 features literally could not ask. See{" "}
+          The gain is real but not from the feature alone (near-random in isolation,
+          AUC ≈ 0.53) — it comes from interaction with the existing 17 features. The
+          baseline model has no customer-history baseline at all; the winning feature
+          answers &quot;is this unusual for this specific customer?&quot;, a question
+          the original 17 features literally could not ask. Recall at the default
+          threshold dipped slightly even as AUC rose — realizing the gain as fewer
+          missed cases would need threshold re-tuning on the augmented model. See{" "}
           <code className="rounded bg-white/10 px-1.5 py-0.5">FINDINGS.md</code> in the
-          repo for the full writeup, including why this was checked for leakage and
-          ruled out.
+          repo for the full writeup, including the correction history.
         </p>
       </section>
     </main>
