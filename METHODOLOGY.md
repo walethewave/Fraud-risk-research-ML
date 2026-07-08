@@ -1,5 +1,21 @@
 # 3. Methodology
 
+> **Erratum (post-publication feature-discovery audit):** the Random
+> Forest results throughout this document (AUC-ROC 0.8223, 17 features)
+> reflect the *original* model. A subsequent closed-loop audit — analyze
+> missed fraud → LLM proposes candidate features → empirically test AUC →
+> audit for temporal leakage — found the original feature selection had
+> discarded a highly predictive feature (`amount_sum_24h`) and that a
+> related candidate (`amount_vs_mean_ratio`) had look-ahead leakage in its
+> source column, contradicting this document's leakage claim in §3.5.4.
+> Both were fixed and the model retrained on 19 features; the corrected
+> result is **AUC-ROC 0.9227**, recall 67.5%. Headline numbers below have
+> been updated to match. **§3.10 (Error Analysis)'s detailed false
+> negative/positive breakdown tables have NOT been regenerated against the
+> corrected model** — they still describe the original 17-feature model's
+> error patterns and should be treated as outdated pending a re-run. Full
+> audit trail: `nibss-fraud-detection/feature_discovery/FINDINGS.md`.
+
 ## 3.1 Data Source and Description
 
 This study utilizes an anonymized transaction-level dataset from the Nigeria Inter-Bank Settlement System (NIBSS), representing digital payment activity across major Nigerian commercial banks. The dataset comprises **1,000,000 transaction records** captured during the 2026 calendar year, providing a comprehensive view of modern payment channel activity in the Nigerian financial ecosystem.
@@ -328,7 +344,7 @@ Experimental design employed a stratified hold-out validation strategy to ensure
 
 **Strict Isolation:**
 
-- **Pre-engineered Aggregates:** Historical aggregates (e.g., `amount_mean_7d`) are pre-computed in the source dataset using look-back windows (avoiding look-ahead leakage) rather than constructed post-split
+- **Pre-engineered Aggregates:** Historical aggregates (e.g., `amount_mean_7d`, `amount_sum_24h`, `tx_count_24h`) are pre-computed in the source dataset using look-back windows (avoiding look-ahead leakage) rather than constructed post-split. **Correction:** this claim was verified true for the 7-day/24-hour rolling aggregates (confirmed by independently recomputing them from raw timestamps across all 1,000,000 rows — 99.6% exact match) but was **false** for `amount_mean_total`, which is a customer-lifetime constant that includes transactions occurring after the row being scored — genuine look-ahead leakage. The derived `amount_vs_mean_ratio` inherited this and has been replaced with `amount_vs_mean_ratio_safe`, a proper backward-only expanding mean. See `feature_discovery/FINDINGS.md`.
 - **Scaling:** StandardScaler fit exclusively on training data; test set transformed using training parameters
 - **No Test Set Contamination:** Test set never observed during feature engineering, model training, or hyperparameter tuning
 
@@ -550,10 +566,10 @@ Model evaluation employed a comprehensive metric suite addressing the unique cha
 - **Advantage:** Threshold-independent; robust to class imbalance
 - **Business Meaning:** Measures model's ability to rank transactions by fraud risk
 
-**Results:**
+**Results (post feature-discovery fix — see erratum at top of document):**
 
-- Logistic Regression: **AUC-ROC = 0.7020**
-- Random Forest: **AUC-ROC = 0.8223** (+17% improvement)
+- Logistic Regression: **AUC-ROC = 0.7020** (unaffected by the fix — linear model, features only help via non-linear interaction)
+- Random Forest: **AUC-ROC = 0.9227** (+31.4% relative improvement), revised from an earlier 0.8223 (+17%) after correcting a feature-selection gap and a temporal leakage issue (`feature_discovery/FINDINGS.md`)
 
 **2. Precision (Positive Predictive Value)**
 
@@ -637,7 +653,7 @@ Fair comparison between models requires:
 - **Same Metrics:** AUC-ROC, precision, recall, F1 computed identically
 - **Same Threshold:** Default 0.5 for initial comparison (later optimized per-model)
 
-**Comparison Results:**
+**Comparison Results (original 17-feature model — see next table for the corrected 19-feature model):**
 
 | Metric      | Logistic Regression | Random Forest | Improvement |
 |-------------|---------------------|---------------|-------------|
@@ -645,6 +661,19 @@ Fair comparison between models requires:
 | Recall      | 54.2%               | 64.0%         | +18.1%      |
 | Precision   | 0.87%               | 0.95%         | +9.2%       |
 | F1-Score    | 0.0172              | 0.0187        | +8.7%       |
+
+**Comparison Results (corrected, post feature-discovery fix — 19 features, current production model):**
+
+| Metric      | Logistic Regression | Random Forest | Improvement |
+|-------------|---------------------|---------------|-------------|
+| AUC-ROC     | 0.7020              | 0.9227        | +31.4%      |
+| Recall      | 54.7%               | 67.5%         | +12.8 pp    |
+| Precision   | 0.88%                | 7.08%         | +7.05 pp    |
+| Accuracy    | 81.35%               | 97.25%        | —           |
+
+Precision improved roughly 8x (0.95% → 7.08%) and false positives fell
+from ~40,098 to ~5,315 on the 200,000-row test set. See
+`feature_discovery/FINDINGS.md` for the full audit.
 
 **Winner:** Random Forest outperformed logistic regression across all metrics.
 
@@ -1071,7 +1100,7 @@ For deployment at 10M+ transactions/month:
 
 ## Conclusion
 
-This methodology section documents a rigorous, reproducible fraud detection research pipeline spanning data preprocessing, feature engineering, class imbalance mitigation, model development, evaluation, and error analysis. The dual-model approach—logistic regression baseline (AUC-ROC 0.7020) and Random Forest production model (AUC-ROC 0.8223)—demonstrates measurable performance gains while maintaining interpretability via SHAP analysis.
+This methodology section documents a rigorous, reproducible fraud detection research pipeline spanning data preprocessing, feature engineering, class imbalance mitigation, model development, evaluation, and error analysis. The dual-model approach—logistic regression baseline (AUC-ROC 0.7020) and Random Forest production model (AUC-ROC 0.9227, corrected from an initial 0.8223 after a feature-discovery audit — see erratum at the top of this document)—demonstrates measurable performance gains while maintaining interpretability via SHAP analysis. Notably, the audit process itself — closing the loop from missed-fraud analysis through LLM-proposed candidate features to empirical AUC testing and a temporal-leakage check — is a methodological contribution in its own right, not just a performance tweak: it surfaced both a feature-selection gap and a documentation error (the "no look-ahead leakage" claim in §3.5.4) that a standard train/test evaluation would not have caught.
 
 Key methodological contributions include:
 
