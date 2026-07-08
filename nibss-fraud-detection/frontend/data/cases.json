@@ -4,7 +4,7 @@
     "caseType": "true_fraud",
     "actualIsFraud": true,
     "predictedIsFraud": true,
-    "fraudProbability": 0.8277962568369513,
+    "fraudProbability": 0.9713777316144694,
     "amount": 260239.2,
     "channel": "POS",
     "hour": 16,
@@ -13,19 +13,251 @@
     "ageGroup": "30-39",
     "topShapFeatures": [
       {
+        "feature": "amount_sum_24h",
+        "value": 0.18508783522626762
+      },
+      {
         "feature": "amount",
-        "value": 0.16789040874839892
+        "value": 0.12964652736292567
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.07719927593111466
+      }
+    ],
+    "explanation": "This transaction is flagged as FRAUD with 97% confidence. The primary concern is a significantly high \"Amount sum 24h,\" indicating unusual recent spending.\n\nSupporting risk factors include the substantial \"Transaction amount\" (\u20a6260,239) and a high \"Amount vs mean ratio safe,\" suggesting this value is atypical compared to the customer's usual safe transactions.\n\nRisk Level: High\nRecommendation: Block transaction.",
+    "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 770520,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": true,
+    "fraudProbability": 0.9402283269175699,
+    "amount": 99470.46,
+    "channel": "Mobile",
+    "hour": 11,
+    "bank": "Access",
+    "location": "Lagos",
+    "ageGroup": "30-39",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.26217378107594963
+      },
+      {
+        "feature": "amount",
+        "value": 0.06631826476635053
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.04226338177478446
+      }
+    ],
+    "explanation": "This transaction is flagged as **HIGH risk fraud** with 94% confidence. The primary reason is a significant deviation in **Amount sum 24h**. Supporting factors include the **Transaction amount** and an unusual **Amount vs mean ratio safe**. We recommend **blocking** this transaction immediately.",
+    "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 307480,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": true,
+    "fraudProbability": 0.9335971258184373,
+    "amount": 1126266.91,
+    "channel": "Web",
+    "hour": 17,
+    "bank": "FCMB",
+    "location": "Other",
+    "ageGroup": "20-29",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.1881899321402781
+      },
+      {
+        "feature": "amount",
+        "value": 0.15265047837743492
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.07950453549890929
+      }
+    ],
+    "explanation": "This transaction is flagged as **High Risk** (93% confidence) primarily due to an abnormally high **Amount sum 24h**.\n\nSupporting risk factors include the large **Transaction amount** (\u20a61,126,267) itself, and the **Amount vs mean ratio safe**, indicating it significantly exceeds typical safe values.\n\n**Action:** Recommend **block** the transaction.",
+    "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 930131,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": true,
+    "fraudProbability": 0.9282598712288207,
+    "amount": 317792.43,
+    "channel": "Mobile",
+    "hour": 14,
+    "bank": "FirstBank",
+    "location": "Lagos",
+    "ageGroup": "40+",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.2446431063472085
+      },
+      {
+        "feature": "amount",
+        "value": 0.13760097193640317
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.07593030034391858
+      }
+    ],
+    "explanation": "This transaction was flagged primarily due to the high **Amount sum 24h** and **Transaction amount**. The **Amount vs mean ratio safe** also contributed to the fraud prediction.\n\nRisk Level: High\n\nRecommendation: Block transaction.",
+    "modelUsed": "gemini-2.5-flash-lite"
+  },
+  {
+    "id": 665767,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": true,
+    "fraudProbability": 0.9189294923458793,
+    "amount": 207267.91,
+    "channel": "Web",
+    "hour": 4,
+    "bank": "FCMB",
+    "location": "Other",
+    "ageGroup": "30-39",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.22878171332215827
+      },
+      {
+        "feature": "amount",
+        "value": 0.12750090356947583
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.05123347544092998
+      }
+    ],
+    "explanation": "This transaction is flagged as high risk (92% confidence) primarily due to a significantly high total amount transacted by the customer in the last 24 hours. Supporting risk factors include the suspicious transaction amount itself (\u20a6207,268) and its high ratio compared to the customer's typical safe transaction mean.\n\n**Risk Level:** High\n**Recommended Action:** Block transaction",
+    "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 775465,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": true,
+    "fraudProbability": 0.9154481207404753,
+    "amount": 203435.36,
+    "channel": "POS",
+    "hour": 11,
+    "bank": "UBA",
+    "location": "Lagos",
+    "ageGroup": "40+",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.2393497842869193
+      },
+      {
+        "feature": "amount",
+        "value": 0.10641908742951367
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.06792415843264679
+      }
+    ],
+    "explanation": "This transaction is flagged due to a high transaction amount (\u20a6203,435), exceeding typical spending patterns for the customer. The high total amount spent in the last 24 hours is the primary driver, supported by the transaction amount itself and its ratio against the customer's average spending.\n\nRisk Level: High\nRecommendation: Block transaction and initiate step-up authentication.",
+    "modelUsed": "gemini-2.5-flash-lite"
+  },
+  {
+    "id": 860123,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": true,
+    "fraudProbability": 0.9136859399272779,
+    "amount": 315848.86,
+    "channel": "Web",
+    "hour": 22,
+    "bank": "Fidelity",
+    "location": "Other",
+    "ageGroup": "20-29",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.16785892742803873
+      },
+      {
+        "feature": "amount",
+        "value": 0.15882760930629097
       },
       {
         "feature": "composite_risk",
-        "value": 0.15176812866287415
-      },
-      {
-        "feature": "month",
-        "value": 0.03667102809819868
+        "value": 0.09103937371235417
       }
     ],
-    "explanation": "This transaction is flagged as **HIGH risk** (83% confidence), primarily driven by the elevated **transaction amount** (\u20a6260,239). Supporting factors include a high **composite risk score** and the **month** of the transaction. We recommend **blocking** this transaction due to the strong fraud prediction.",
+    "explanation": "This transaction was flagged due to a high transaction amount and a significant total spend in the last 24 hours, both pushing the prediction towards fraud. The composite risk score further supports this.\n\nRisk Level: High\n\nRecommendation: Block the transaction.",
+    "modelUsed": "gemini-2.5-flash-lite"
+  },
+  {
+    "id": 675207,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": true,
+    "fraudProbability": 0.9038813429415958,
+    "amount": 1743452.58,
+    "channel": "IB",
+    "hour": 13,
+    "bank": "FirstBank",
+    "location": "Other",
+    "ageGroup": "40+",
+    "topShapFeatures": [
+      {
+        "feature": "amount",
+        "value": 0.19787085349121863
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.11891281151094488
+      },
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.07435148692467103
+      }
+    ],
+    "explanation": "This transaction is flagged primarily due to the unusually high **transaction amount** (\u20a61,743,453). Supporting risk factors include a high **Amount vs mean ratio safe** and a significant **Amount sum 24h**, all strongly indicating fraud.\n\n**Risk Level:** High\n**Action:** Recommend blocking the transaction.",
+    "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 445537,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": true,
+    "fraudProbability": 0.8970170911980218,
+    "amount": 84234.04,
+    "channel": "Web",
+    "hour": 17,
+    "bank": "Fidelity",
+    "location": "Lagos",
+    "ageGroup": "40+",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.2717786710362911
+      },
+      {
+        "feature": "amount",
+        "value": 0.06363925225327312
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.04429887869363403
+      }
+    ],
+    "explanation": "This transaction is flagged as **HIGH RISK** (90% confidence) primarily due to an unusually high **Amount sum 24h**.\n\nSupporting risk factors include the **Transaction amount** itself and the **Amount vs mean ratio safe**.\n\n**Recommendation: Block transaction.**",
     "modelUsed": "gemini-2.5-flash"
   },
   {
@@ -33,7 +265,7 @@
     "caseType": "true_fraud",
     "actualIsFraud": true,
     "predictedIsFraud": true,
-    "fraudProbability": 0.7037032263388967,
+    "fraudProbability": 0.895813381359588,
     "amount": 439846.94,
     "channel": "Mobile",
     "hour": 15,
@@ -42,77 +274,106 @@
     "ageGroup": "30-39",
     "topShapFeatures": [
       {
+        "feature": "amount_sum_24h",
+        "value": 0.17341629827436408
+      },
+      {
         "feature": "amount",
-        "value": 0.15946857322296076
+        "value": 0.15264780288558155
       },
       {
-        "feature": "merchant_risk_score",
-        "value": 0.04411960996011023
-      },
-      {
-        "feature": "day_of_week",
-        "value": -0.009085135947162414
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.06997289670038263
       }
     ],
-    "explanation": "This transaction is flagged as **FRAUD** (70% confidence), primarily due to the unusually high transaction amount. The significant merchant risk score also contributed to the fraud prediction.\n\n**Risk Level:** High\n\n**Recommendation:** Block the transaction.",
+    "explanation": "This transaction is flagged primarily due to a high sum of transactions within the last 24 hours. Supporting factors include the significant transaction amount itself and its elevated ratio compared to the average safe transaction amount.\n\nRisk level: High\nRecommended action: Block the transaction.",
     "modelUsed": "gemini-2.5-flash"
   },
   {
-    "id": 100533,
+    "id": 447138,
     "caseType": "true_fraud",
     "actualIsFraud": true,
     "predictedIsFraud": true,
-    "fraudProbability": 0.5895089267593789,
-    "amount": 127229.57,
-    "channel": "Mobile",
+    "fraudProbability": 0.8900112730530165,
+    "amount": 3988078.24,
+    "channel": "POS",
     "hour": 16,
     "bank": "Union",
-    "location": "Lagos",
+    "location": "Other",
     "ageGroup": "40+",
     "topShapFeatures": [
       {
         "feature": "amount",
-        "value": 0.04438967464903877
+        "value": 0.20482657854812394
       },
       {
-        "feature": "month",
-        "value": 0.028633348421534286
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.11746721417120193
       },
       {
-        "feature": "merchant_risk_score",
-        "value": 0.015231325885003345
+        "feature": "amount_sum_24h",
+        "value": 0.057643370914542226
       }
     ],
-    "explanation": "This transaction was flagged primarily due to the **transaction amount**. Supporting risk factors include the **month** and the **merchant risk score**.\n\nGiven the model's 59% confidence, this is a **Medium** risk transaction.\n\n**Action:** Recommend **step-up authentication**.",
-    "modelUsed": "gemini-2.5-flash"
+    "explanation": "**Subject: POTENTIAL FRAUD ALERT - Transaction flagged by ML Model**\n\nThis POS transaction of \u20a63,988,078 was flagged due to its unusually high amount. Supporting risk factors include the large transaction amount versus the average, and the total transaction sum within 24 hours. The risk level is **High**. Recommend **BLOCKING** this transaction immediately.",
+    "modelUsed": "gemini-2.5-flash-lite"
   },
   {
-    "id": 911862,
+    "id": 767141,
     "caseType": "true_fraud",
     "actualIsFraud": true,
     "predictedIsFraud": true,
-    "fraudProbability": 0.5804598896382324,
-    "amount": 187184.63,
-    "channel": "Mobile",
-    "hour": 15,
-    "bank": "FirstBank",
-    "location": "Lagos",
-    "ageGroup": "30-39",
+    "fraudProbability": 0.8794713738683313,
+    "amount": 135234.39,
+    "channel": "Web",
+    "hour": 8,
+    "bank": "Access",
+    "location": "Other",
+    "ageGroup": "40+",
     "topShapFeatures": [
       {
+        "feature": "amount_sum_24h",
+        "value": 0.1801755953066123
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.07582376201561603
+      },
+      {
         "feature": "amount",
-        "value": 0.11054800035087198
-      },
-      {
-        "feature": "composite_risk",
-        "value": -0.025525294258529
-      },
-      {
-        "feature": "month",
-        "value": 0.014058984295634985
+        "value": 0.0652876152260301
       }
     ],
-    "explanation": "This transaction was flagged primarily due to the **high transaction amount**. A supporting risk factor is the **month of the transaction**.\n\nGiven the model's 'FRAUD' prediction with 58% confidence, the risk level is **Medium**.\nRecommendation: Initiate **step-up authentication** to verify the customer's identity.",
+    "explanation": "This transaction is flagged as FRAUD with 88% confidence.\n\nThe primary driver for this alert is the **Amount sum 24h**. Supporting risk factors include the **Amount vs mean ratio safe** and the **Transaction amount** itself.\n\nGiven the high confidence and contributing factors, the risk level is **High**.\n\nRecommendation: **Block** the transaction.",
+    "modelUsed": "gemini-2.5-flash-lite"
+  },
+  {
+    "id": 86702,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": true,
+    "fraudProbability": 0.8254245875982591,
+    "amount": 88016.92,
+    "channel": "Mobile",
+    "hour": 14,
+    "bank": "Wema",
+    "location": "Other",
+    "ageGroup": "40+",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.2514519296401801
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.04673045928878753
+      },
+      {
+        "feature": "amount",
+        "value": 0.03605778261858253
+      }
+    ],
+    "explanation": "This transaction is flagged as **high risk** (83% confidence).\n\nThe primary reason is a significant **Amount sum 24h**, indicating unusually high recent spending. Supporting factors include a high **Amount vs mean ratio safe** and the **Transaction amount** itself.\n\n**Recommendation:** Block transaction.",
     "modelUsed": "gemini-2.5-flash"
   },
   {
@@ -120,7 +381,7 @@
     "caseType": "true_fraud",
     "actualIsFraud": true,
     "predictedIsFraud": true,
-    "fraudProbability": 0.579485537731186,
+    "fraudProbability": 0.8089119062477883,
     "amount": 616347.36,
     "channel": "Mobile",
     "hour": 16,
@@ -130,142 +391,142 @@
     "topShapFeatures": [
       {
         "feature": "amount",
-        "value": 0.1893127257037512
+        "value": 0.1671110436954627
       },
       {
-        "feature": "month",
-        "value": -0.08240206012468046
+        "feature": "amount_sum_24h",
+        "value": 0.11134378996429742
       },
       {
-        "feature": "bank_GTBank",
-        "value": -0.018940130094209064
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.09380062277565346
       }
     ],
-    "explanation": "This transaction is flagged primarily due to the unusually high **transaction amount** (\u20a6616,347). While the **month** and the specific **bank (GTBank)** were also considered by the model, their contributions were negative, reducing the overall fraud score.\n\nRisk level: **Medium**.\nRecommendation: **Step-up authentication** to confirm the transaction directly with the customer.",
+    "explanation": "This transaction is flagged as **High Risk** (81% confidence).\n\nThe primary reason for flagging is the unusually high **Transaction amount** (\u20a6616,347).\nSupporting risk factors include a high **Amount sum 24h** and a high **Amount vs mean ratio safe**.\n\n**Risk Level:** High\n**Recommended Action:** Block transaction.",
     "modelUsed": "gemini-2.5-flash"
   },
   {
-    "id": 106033,
+    "id": 66153,
     "caseType": "true_fraud",
     "actualIsFraud": true,
     "predictedIsFraud": true,
-    "fraudProbability": 0.5694926958311204,
-    "amount": 270457.57,
-    "channel": "Mobile",
-    "hour": 10,
-    "bank": "UBA",
-    "location": "Other",
-    "ageGroup": "40+",
-    "topShapFeatures": [
-      {
-        "feature": "amount",
-        "value": 0.11585351554326356
-      },
-      {
-        "feature": "merchant_risk_score",
-        "value": -0.026153445810690814
-      },
-      {
-        "feature": "composite_risk",
-        "value": -0.02248673716078098
-      }
-    ],
-    "explanation": "This transaction is flagged as **Medium Risk** for fraud (57% confidence).\n\nThe primary reason for the flag is the **high transaction amount** (\u20a6270,458), which significantly contributed to the fraud prediction. Other key factors considered were the merchant risk score and composite risk score.\n\n**Recommendation:** Initiate **step-up authentication** for this mobile transaction.",
-    "modelUsed": "gemini-2.5-flash"
-  },
-  {
-    "id": 445537,
-    "caseType": "true_fraud",
-    "actualIsFraud": true,
-    "predictedIsFraud": true,
-    "fraudProbability": 0.5444906268418371,
-    "amount": 84234.04,
+    "fraudProbability": 0.7126527724071248,
+    "amount": 62760.96,
     "channel": "Web",
-    "hour": 17,
+    "hour": 14,
     "bank": "Fidelity",
-    "location": "Lagos",
-    "ageGroup": "40+",
-    "topShapFeatures": [
-      {
-        "feature": "amount",
-        "value": 0.03372074317373503
-      },
-      {
-        "feature": "month",
-        "value": 0.026006763814523614
-      },
-      {
-        "feature": "composite_risk",
-        "value": -0.015084045202316801
-      }
-    ],
-    "explanation": "This transaction was flagged primarily due to the **transaction amount**, which was the largest positive contributor to the fraud prediction. The **month** was also a supporting risk factor.\n\nGiven the 54% fraud confidence, the risk level is **Medium**.\n\n**Recommendation:** Implement **step-up authentication** for this transaction.",
-    "modelUsed": "gemini-2.5-flash"
-  },
-  {
-    "id": 269209,
-    "caseType": "true_fraud",
-    "actualIsFraud": true,
-    "predictedIsFraud": true,
-    "fraudProbability": 0.5438568549323329,
-    "amount": 135841.57,
-    "channel": "Web",
-    "hour": 22,
-    "bank": "FCMB",
     "location": "Lagos",
     "ageGroup": "20-29",
     "topShapFeatures": [
       {
+        "feature": "amount_sum_24h",
+        "value": 0.20027419488468046
+      },
+      {
         "feature": "amount",
-        "value": 0.05463261064973346
+        "value": -0.10438838254143509
       },
       {
-        "feature": "month",
-        "value": 0.03675083423631955
-      },
-      {
-        "feature": "hour",
-        "value": -0.029364291165248572
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.051407310989510534
       }
     ],
-    "explanation": "This transaction was flagged primarily due to its **amount (\u20a6135,842)**. A supporting risk factor is the **month** of the transaction. The hour of day actually reduced the risk.\n\nGiven the 54% confidence level, this indicates a **Medium risk** transaction.\n\nWe recommend **step-up authentication** to verify the customer's identity.",
-    "modelUsed": "gemini-2.5-flash"
+    "explanation": "This transaction was flagged due to the high sum of money transacted within 24 hours. Supporting factors include the transaction amount itself being moderately risky, and the amount-to-mean ratio also contributing to risk.\n\nRisk Level: High.\n\nRecommendation: Block transaction.",
+    "modelUsed": "gemini-2.5-flash-lite"
   },
   {
-    "id": 86702,
+    "id": 911862,
     "caseType": "true_fraud",
     "actualIsFraud": true,
     "predictedIsFraud": true,
-    "fraudProbability": 0.5041292051991312,
-    "amount": 88016.92,
+    "fraudProbability": 0.7001018456162368,
+    "amount": 187184.63,
     "channel": "Mobile",
-    "hour": 14,
-    "bank": "Wema",
-    "location": "Other",
-    "ageGroup": "40+",
+    "hour": 15,
+    "bank": "FirstBank",
+    "location": "Lagos",
+    "ageGroup": "30-39",
     "topShapFeatures": [
       {
+        "feature": "amount",
+        "value": 0.11752637183242529
+      },
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.07845170059828291
+      },
+      {
         "feature": "month",
-        "value": 0.032981182362912885
+        "value": 0.012702940234258824
+      }
+    ],
+    "explanation": "This transaction is flagged primarily due to the unusually high transaction amount. Supporting risk factors include a significant sum of transactions in the last 24 hours and the specific month.\n\n**Risk Level:** High\n**Recommendation:** Block this transaction.",
+    "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 49300,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": true,
+    "fraudProbability": 0.6746865839048855,
+    "amount": 117519.98,
+    "channel": "Mobile",
+    "hour": 18,
+    "bank": "Sterling",
+    "location": "Other",
+    "ageGroup": "30-39",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.1675193089334402
+      },
+      {
+        "feature": "month",
+        "value": -0.055991238675859485
       },
       {
         "feature": "amount",
-        "value": 0.0226403261871908
-      },
-      {
-        "feature": "day_of_week",
-        "value": -0.02023341479354319
+        "value": 0.05001066512651537
       }
     ],
-    "explanation": "This transaction was primarily flagged due to the **Month**, which significantly contributed to the fraud prediction. The `Transaction amount` also increased the risk.\n\nRisk Level: **Medium** (50% confidence).\n\nRecommendation: **Step-up authentication** to verify the customer's identity.",
+    "explanation": "This transaction is flagged primarily due to a significantly high aggregate amount of transactions within the last 24 hours (+0.168). The individual transaction amount (+0.050) also contributes to the fraud prediction.\n\n**Risk Level:** Medium-High (67% confidence).\n**Recommended Action:** Initiate step-up authentication to verify the customer's identity.",
+    "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 795494,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": true,
+    "fraudProbability": 0.6689757401334379,
+    "amount": 100212.56,
+    "channel": "Mobile",
+    "hour": 8,
+    "bank": "Zenith",
+    "location": "Lagos",
+    "ageGroup": "40+",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.12616893965184997
+      },
+      {
+        "feature": "amount",
+        "value": 0.03908513872745514
+      },
+      {
+        "feature": "month",
+        "value": 0.021809080005818594
+      }
+    ],
+    "explanation": "This transaction is flagged primarily due to a high 'Amount sum 24h', significantly contributing to the fraud prediction. Supporting factors include the 'Transaction amount' and the specific 'Month'.\n\nThe risk level is **Medium**.\nRecommend initiating a **Step-Up Authentication** to verify the customer's identity before approval.",
     "modelUsed": "gemini-2.5-flash"
   },
   {
     "id": 107693,
     "caseType": "true_fraud",
     "actualIsFraud": true,
-    "predictedIsFraud": false,
-    "fraudProbability": 0.4318987266095533,
+    "predictedIsFraud": true,
+    "fraudProbability": 0.6078224084264674,
     "amount": 51060.24,
     "channel": "Mobile",
     "hour": 11,
@@ -274,27 +535,56 @@
     "ageGroup": "30-39",
     "topShapFeatures": [
       {
+        "feature": "amount_sum_24h",
+        "value": 0.08418883147279094
+      },
+      {
         "feature": "amount",
-        "value": -0.10025727508255038
+        "value": -0.025320772222381785
+      },
+      {
+        "feature": "composite_risk",
+        "value": 0.023481100914253098
+      }
+    ],
+    "explanation": "This transaction is flagged primarily due to a high **Amount sum 24h** by the customer. A significant **Composite risk score** further supports the fraud prediction. The model's confidence is 61%, indicating a **Medium Risk**.\n\nRecommend **step-up authentication** to verify the customer's identity before proceeding.",
+    "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 742010,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": true,
+    "fraudProbability": 0.5819683979198425,
+    "amount": 71679.74,
+    "channel": "Mobile",
+    "hour": 15,
+    "bank": "Sterling",
+    "location": "Other",
+    "ageGroup": "30-39",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.1711160092300948
       },
       {
         "feature": "month",
-        "value": 0.02602799882837225
+        "value": -0.06212019617098965
       },
       {
-        "feature": "bank_FCMB",
-        "value": -0.019854828292080136
+        "feature": "merchant_risk_score",
+        "value": -0.012105284216830327
       }
     ],
-    "explanation": "This transaction was flagged due to a moderate confidence (43%) of it being *not* fraud.\n\nSupporting risk factors include the transaction amount, month, and bank (FCMB), all contributing slightly towards a legitimate transaction.\n\nThe risk level is **Low**.\n\n**Recommendation: Monitor** the transaction.",
+    "explanation": "This transaction was flagged primarily due to the **Amount sum 24h**.\n\nSupporting risk factors include:\n* **Month**\n* **Merchant risk score**\n\nThe risk level is **Medium**.\n\n**Recommendation:** Step-up authentication.",
     "modelUsed": "gemini-2.5-flash-lite"
   },
   {
     "id": 329453,
     "caseType": "true_fraud",
     "actualIsFraud": true,
-    "predictedIsFraud": false,
-    "fraudProbability": 0.3422984179573052,
+    "predictedIsFraud": true,
+    "fraudProbability": 0.5408272083585741,
     "amount": 40123.24,
     "channel": "Web",
     "hour": 8,
@@ -304,26 +594,403 @@
     "topShapFeatures": [
       {
         "feature": "amount",
-        "value": -0.15757208948478937
+        "value": -0.0658308744188916
+      },
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.05843048242832836
       },
       {
         "feature": "month",
-        "value": 0.03274670821840739
-      },
-      {
-        "feature": "bank_UBA",
-        "value": -0.014446349249532768
+        "value": 0.023695212544469536
       }
     ],
-    "explanation": "This transaction was flagged due to the model's low confidence (34%), despite predicting 'NOT FRAUD'. Key factors contributing to the model's analysis include the transaction's Month (which pushed towards fraud), Amount, and the Bank (UBA).\n\nRisk Level: Medium\nRecommendation: Step-up Authentication",
+    "explanation": "This transaction is flagged primarily due to an unusually high cumulative amount transacted in the last 24 hours. The specific month also contributed to the fraud prediction.\n\nRisk Level: Medium (54% confidence).\nRecommendation: Implement step-up authentication for this transaction.",
     "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 30995,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.48398750719648875,
+    "amount": 296024.87,
+    "channel": "POS",
+    "hour": 1,
+    "bank": "Fidelity",
+    "location": "Other",
+    "ageGroup": "20-29",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": -0.079092556781109
+      },
+      {
+        "feature": "amount",
+        "value": 0.0602221417752483
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.024772146264209823
+      }
+    ],
+    "explanation": "This transaction was flagged primarily due to its **transaction amount**. Although the model predicts \"NOT FRAUD\" with low confidence (48%), the amount of \u20a6296,025 is relatively high for this customer profile.\n\nSupporting factors pushing towards fraud risk include:\n*   Transaction amount (+0.060)\n*   Amount vs mean ratio safe (+0.025)\n\nRisk Level: **Medium**\n\nRecommendation: **Monitor** this transaction.",
+    "modelUsed": "gemini-2.5-flash-lite"
+  },
+  {
+    "id": 106033,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.4807863034698778,
+    "amount": 270457.57,
+    "channel": "Mobile",
+    "hour": 10,
+    "bank": "UBA",
+    "location": "Other",
+    "ageGroup": "40+",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": -0.07085784529379939
+      },
+      {
+        "feature": "amount",
+        "value": 0.04841284800880631
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.02570996426149747
+      }
+    ],
+    "explanation": "This transaction was flagged as unusual primarily due to its **transaction amount** (+0.048), which significantly pushed it towards higher risk. A supporting factor is the **amount vs mean ratio safe** (+0.026). Despite the \"NOT FRAUD\" prediction, the low confidence (48%) indicates significant uncertainty.\n\n**Risk Level:** Medium\n**Recommended Action:** Step-up authentication.",
+    "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 269209,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.4783533394293979,
+    "amount": 135841.57,
+    "channel": "Web",
+    "hour": 22,
+    "bank": "FCMB",
+    "location": "Lagos",
+    "ageGroup": "20-29",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": -0.05562663705643878
+      },
+      {
+        "feature": "month",
+        "value": 0.025262401960605356
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.016271302509399704
+      }
+    ],
+    "explanation": "This transaction was flagged due to the machine learning model's low confidence (48%) in its 'NOT FRAUD' prediction, indicating unusual activity. Supporting risk factors include the 'Month' and 'Amount vs mean ratio safe', which pushed the score towards fraud.\n\n**Risk Level:** Medium\n**Recommended Action:** Step-up authentication",
+    "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 494264,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.475762786154328,
+    "amount": 185064.24,
+    "channel": "Mobile",
+    "hour": 3,
+    "bank": "Wema",
+    "location": "Other",
+    "ageGroup": "20-29",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": -0.07113649657969173
+      },
+      {
+        "feature": "amount",
+        "value": 0.047383574668568115
+      },
+      {
+        "feature": "month",
+        "value": -0.03882147029594354
+      }
+    ],
+    "explanation": "This transaction was flagged due to the transaction amount itself, which is relatively high.\n\nSupporting risk factors include: a lower than usual transaction amount sum in the last 24 hours, and the transaction occurring at an unusual month.\n\nRisk Level: Low\n\nRecommendation: Monitor.",
+    "modelUsed": "gemini-2.5-flash-lite"
+  },
+  {
+    "id": 619668,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.460441277895624,
+    "amount": 124170.89,
+    "channel": "Mobile",
+    "hour": 16,
+    "bank": "GTBank",
+    "location": "Lagos",
+    "ageGroup": "20-29",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": -0.030718677968068295
+      },
+      {
+        "feature": "bank_GTBank",
+        "value": -0.022445968913513147
+      },
+      {
+        "feature": "composite_risk",
+        "value": 0.02037630549020444
+      }
+    ],
+    "explanation": "**Explanation:**\n\nThis transaction was flagged primarily because of its **composite risk score (+0.020)**, which pushed the prediction slightly towards fraud.\n\nSupporting factors include:\n\n*   **Amount sum 24h (-0.031):** This suggests the amount is not unusually high compared to recent activity, pushing the prediction away from fraud.\n*   **Bank (gtbank) (-0.022):** GTBank usage is also a mitigating factor, reducing perceived risk.\n\n**Risk Level:** Low\n\n**Recommendation:** Monitor",
+    "modelUsed": "gemini-2.5-flash-lite"
+  },
+  {
+    "id": 632514,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.44956649990984276,
+    "amount": 251760.52,
+    "channel": "Web",
+    "hour": 16,
+    "bank": "UBA",
+    "location": "Other",
+    "ageGroup": "40+",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": -0.07367480812077813
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": 0.034029405633112006
+      },
+      {
+        "feature": "composite_risk",
+        "value": -0.018150873950743038
+      }
+    ],
+    "explanation": "This transaction was flagged primarily due to the \"Amount vs mean ratio safe\" factor, which slightly increased the fraud prediction.\n\nSupporting factors include a lower-than-average \"Amount sum 24h\" and a neutral \"Composite risk score\".\n\nThe risk level is **Low**.\n\n**Recommendation:** **Monitor** the transaction.",
+    "modelUsed": "gemini-2.5-flash-lite"
+  },
+  {
+    "id": 506270,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.44908787504275877,
+    "amount": 53571.49,
+    "channel": "Mobile",
+    "hour": 19,
+    "bank": "Zenith",
+    "location": "Other",
+    "ageGroup": "40+",
+    "topShapFeatures": [
+      {
+        "feature": "amount",
+        "value": -0.05593807592704143
+      },
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.05476492390121004
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": -0.03884811549101772
+      }
+    ],
+    "explanation": "This transaction was flagged primarily due to a slightly elevated transaction amount relative to the customer's 24-hour spending history.\n\nSupporting risk factors include:\n*   Amount sum 24h (+0.055)\n*   Transaction amount (-0.056)\n*   Amount vs mean ratio safe (-0.039)\n\nRisk Level: LOW\n\nRecommendation: MONITOR",
+    "modelUsed": "gemini-2.5-flash-lite"
+  },
+  {
+    "id": 100533,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.4462522934705696,
+    "amount": 127229.57,
+    "channel": "Mobile",
+    "hour": 16,
+    "bank": "Union",
+    "location": "Lagos",
+    "ageGroup": "40+",
+    "topShapFeatures": [
+      {
+        "feature": "amount",
+        "value": -0.03131855745778565
+      },
+      {
+        "feature": "month",
+        "value": 0.02251577087334964
+      },
+      {
+        "feature": "amount_sum_24h",
+        "value": -0.021087537362844487
+      }
+    ],
+    "explanation": "This transaction was flagged due to low confidence (45%) in its 'NOT FRAUD' prediction. The 'Month' factor slightly pushed the prediction toward fraud. However, the 'Transaction amount' and 'Amount sum 24h' factors significantly pushed it toward legitimate, creating the low confidence.\n\n**Risk Level:** Medium\n**Recommendation:** Step-up authentication",
+    "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 235859,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.4334279759660519,
+    "amount": 118692.94,
+    "channel": "Mobile",
+    "hour": 9,
+    "bank": "Wema",
+    "location": "Other",
+    "ageGroup": "40+",
+    "topShapFeatures": [
+      {
+        "feature": "merchant_risk_score",
+        "value": -0.035391136684649445
+      },
+      {
+        "feature": "amount",
+        "value": -0.027668517628645445
+      },
+      {
+        "feature": "month",
+        "value": 0.01883278041989256
+      }
+    ],
+    "explanation": "This transaction was flagged primarily due to its timing within the month. While the model's overall fraud prediction is \"NOT FRAUD\" with 43% confidence, supporting factors pushing towards legitimacy include Merchant risk score and Transaction amount.\n\n**Risk Level:** Low\n\n**Recommendation:** Monitor",
+    "modelUsed": "gemini-2.5-flash-lite"
+  },
+  {
+    "id": 38742,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.41423722814503916,
+    "amount": 50170.0,
+    "channel": "Mobile",
+    "hour": 19,
+    "bank": "UBA",
+    "location": "Other",
+    "ageGroup": "20-29",
+    "topShapFeatures": [
+      {
+        "feature": "amount",
+        "value": -0.15360406919819136
+      },
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.09537764381701869
+      },
+      {
+        "feature": "month",
+        "value": 0.01846491987348688
+      }
+    ],
+    "explanation": "This transaction was flagged primarily due to the **transaction amount** pushing towards legitimacy (negative contribution).\n\nSupporting factors include:\n*   **Amount sum 24h:** Contributed slightly towards fraud.\n*   **Month:** Contributed very slightly towards fraud.\n\nGiven the low confidence (41%) and the primary factor indicating legitimacy, the risk level is **Low**.\n\nRecommendation: **Monitor**.",
+    "modelUsed": "gemini-2.5-flash-lite"
+  },
+  {
+    "id": 619282,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.3879675515377439,
+    "amount": 116187.77,
+    "channel": "Mobile",
+    "hour": 13,
+    "bank": "Zenith",
+    "location": "Lagos",
+    "ageGroup": "30-39",
+    "topShapFeatures": [
+      {
+        "feature": "amount",
+        "value": -0.06165494376933292
+      },
+      {
+        "feature": "amount_sum_24h",
+        "value": -0.044912171634477555
+      },
+      {
+        "feature": "month",
+        "value": 0.02548948356306945
+      }
+    ],
+    "explanation": "This transaction was flagged due to the machine learning model's low confidence (39%) in its 'NOT FRAUD' prediction, indicating ambiguity.\n\nSupporting factors:\n*   Month (contributed positively towards fraud risk)\n*   Transaction amount (reduced fraud risk)\n*   Amount sum 24h (reduced fraud risk)\n\nRisk level: Medium\nAction: Recommend step-up authentication to verify the customer's intent.",
+    "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 745456,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.3832400739964463,
+    "amount": 97076.63,
+    "channel": "Mobile",
+    "hour": 9,
+    "bank": "GTBank",
+    "location": "Other",
+    "ageGroup": "20-29",
+    "topShapFeatures": [
+      {
+        "feature": "amount",
+        "value": -0.05332214289848384
+      },
+      {
+        "feature": "merchant_risk_score",
+        "value": -0.04492119465619995
+      },
+      {
+        "feature": "amount_sum_24h",
+        "value": -0.024284948410821985
+      }
+    ],
+    "explanation": "**Explanation for Fraud Analyst:**\n\nThis transaction was flagged due to the model's low confidence (38%) despite not predicting fraud.\n\n**Supporting Risk Factors:**\n*   Transaction amount: \u20a697,077\n*   Merchant risk score\n*   Amount sum 24h\n\n**Risk Level:** Low\n\n**Recommendation:** Monitor this transaction.",
+    "modelUsed": "gemini-2.5-flash-lite"
+  },
+  {
+    "id": 570399,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.3596538198346411,
+    "amount": 137003.36,
+    "channel": "ECOM",
+    "hour": 15,
+    "bank": "FCMB",
+    "location": "Other",
+    "ageGroup": "30-39",
+    "topShapFeatures": [
+      {
+        "feature": "month",
+        "value": -0.0853880516336618
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": -0.030491884372327166
+      },
+      {
+        "feature": "merchant_risk_score",
+        "value": -0.013625433824066559
+      }
+    ],
+    "explanation": "This transaction was flagged due to a low model confidence of 36% that it is *not* fraud.\n\nSupporting factors include:\n* Month (negative contribution)\n* Amount vs mean ratio safe (negative contribution)\n* Merchant risk score (negative contribution)\n\nRisk Level: Low.\n\nRecommendation: Monitor.",
+    "modelUsed": "gemini-2.5-flash-lite"
   },
   {
     "id": 885104,
     "caseType": "true_fraud",
     "actualIsFraud": true,
     "predictedIsFraud": false,
-    "fraudProbability": 0.2926175820637309,
+    "fraudProbability": 0.34714824817115897,
     "amount": 73065.1,
     "channel": "Web",
     "hour": 21,
@@ -333,18 +1000,105 @@
     "topShapFeatures": [
       {
         "feature": "month",
-        "value": -0.1557956357541043
+        "value": -0.1212279513665188
       },
       {
-        "feature": "amount",
-        "value": -0.031167187346899248
+        "feature": "amount_sum_24h",
+        "value": -0.029285706291654483
       },
       {
-        "feature": "hour",
-        "value": -0.013999492353878339
+        "feature": "composite_risk",
+        "value": 0.021231853008603967
       }
     ],
-    "explanation": "Here's an explanation for the fraud analyst:\n\n1.  **Primary reason flagged:** The transaction was flagged due to the model's low confidence (29%) in its 'NOT FRAUD' prediction, indicating ambiguity.\n2.  **Supporting risk factors:** Key risk factors influencing this decision were the month, transaction amount, and hour of day, all of which reduced the fraud score.\n3.  **Risk level:** Low.\n4.  **Recommendation:** Monitor.",
+    "explanation": "This transaction was flagged due to the model's low confidence (35%) in its \"NOT FRAUD\" prediction, indicating significant uncertainty.\n\n**Supporting risk factor:**\n*   `Composite risk score` (+0.021), which positively contributed towards a fraud prediction.\n\n**Risk level:** Medium\n**Recommended action:** Step-up authentication",
+    "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 799440,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.2684655640415695,
+    "amount": 65106.98,
+    "channel": "Mobile",
+    "hour": 11,
+    "bank": "FCMB",
+    "location": "Lagos",
+    "ageGroup": "30-39",
+    "topShapFeatures": [
+      {
+        "feature": "amount",
+        "value": -0.15278081723359369
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": -0.04056463163290694
+      },
+      {
+        "feature": "merchant_risk_score",
+        "value": -0.02418063155716541
+      }
+    ],
+    "explanation": "This transaction was flagged primarily due to the **low confidence (27%)** from the model.\n\nSupporting factors:\n*   Transaction amount (reduced risk)\n*   Amount vs mean ratio safe (reduced risk)\n*   Merchant risk score (reduced risk)\n\nRisk Level: **Low**\n\nRecommendation: **Monitor**",
+    "modelUsed": "gemini-2.5-flash-lite"
+  },
+  {
+    "id": 318066,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.2550897874522438,
+    "amount": 605425.27,
+    "channel": "IB",
+    "hour": 3,
+    "bank": "FCMB",
+    "location": "Lagos",
+    "ageGroup": "40+",
+    "topShapFeatures": [
+      {
+        "feature": "amount_sum_24h",
+        "value": -0.12511439500474847
+      },
+      {
+        "feature": "month",
+        "value": -0.0808310610034059
+      },
+      {
+        "feature": "composite_risk",
+        "value": -0.031989655447636815
+      }
+    ],
+    "explanation": "This transaction is flagged due to the model's very low confidence (26%) in its legitimate prediction, implying a high fraud probability. Supporting factors considered were Amount sum 24h, Month, and Composite risk score.\n\nRisk Level: **High**\nRecommendation: **Step-up authentication**",
+    "modelUsed": "gemini-2.5-flash"
+  },
+  {
+    "id": 131330,
+    "caseType": "true_fraud",
+    "actualIsFraud": true,
+    "predictedIsFraud": false,
+    "fraudProbability": 0.12064896248563496,
+    "amount": 13891.2,
+    "channel": "ECOM",
+    "hour": 18,
+    "bank": "Sterling",
+    "location": "Lagos",
+    "ageGroup": "20-29",
+    "topShapFeatures": [
+      {
+        "feature": "amount",
+        "value": -0.2637679163800926
+      },
+      {
+        "feature": "amount_vs_mean_ratio_safe",
+        "value": -0.1194874044231207
+      },
+      {
+        "feature": "amount_sum_24h",
+        "value": 0.05458514912156084
+      }
+    ],
+    "explanation": "This transaction was flagged due to the positive contribution of 'Amount sum 24h' (+0.055) towards fraud. However, key risk factors like 'Transaction amount' (-0.264) and 'Amount vs mean ratio safe' (-0.119) strongly mitigated the overall risk.\n\nThe overall fraud risk is **LOW**.\nRecommend **monitor**.",
     "modelUsed": "gemini-2.5-flash"
   }
 ]
