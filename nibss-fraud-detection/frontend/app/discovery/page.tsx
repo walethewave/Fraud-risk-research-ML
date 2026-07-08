@@ -92,20 +92,23 @@ export default function DiscoveryPage() {
         </div>
         <p className="text-sm text-[--muted]">
           <code className="rounded bg-white/10 px-1.5 py-0.5 text-[--foreground]">amount_vs_mean_ratio</code>{" "}
-          inherits the leakage and was excluded from the validated test. Notably,{" "}
+          inherited the leakage — but rather than dropping it, it was <strong>fixed</strong>: rebuilt as{" "}
+          <code className="rounded bg-white/10 px-1.5 py-0.5 text-[--foreground]">amount_vs_mean_ratio_safe</code>,
+          a proper backward-only expanding mean per customer, and included in the
+          production retrain below. Notably,{" "}
           <code className="rounded bg-white/10 px-1.5 py-0.5 text-[--foreground]">composite_risk</code> — already
           in the deployed model — correlates{" "}
           <span className="text-[--foreground]">
             {leakageCheck.compositeRiskCorrelation.amount_vs_mean_ratio?.toFixed(2)}
           </span>{" "}
-          with the leaky ratio, meaning the original model has some diluted exposure to
-          this same issue already.
+          with the original leaky ratio, meaning the pre-fix model had some diluted
+          exposure to this same issue already.
         </p>
       </section>
 
       {/* Step 4 */}
       <section className="glass rounded-2xl p-6">
-        <StepHeader n={4} title="Does the clean feature actually move AUC?" />
+        <StepHeader n={4} title="Does the fixed feature set actually move AUC?" />
         <p className="mb-4 text-sm text-[--muted]">
           Retrained the identical Random Forest, same split, with vs. without{" "}
           {impact.candidateFeatures.map((f, i) => (
@@ -114,7 +117,9 @@ export default function DiscoveryPage() {
               <span className="text-[--foreground]">{featureLabel(f)}</span>
             </span>
           ))}{" "}
-          only — the leakage-checked, validated candidate.
+          — both fixed features included together, not just one in isolation. This is
+          the actual retrain applied to the production notebooks, not an intermediate
+          test.
         </p>
         <AucComparison impact={impact} />
         <div
@@ -127,15 +132,17 @@ export default function DiscoveryPage() {
 
       <section className="glass rounded-2xl p-6 text-sm text-[--muted]">
         <p>
-          The gain is real but not from the feature alone (near-random in isolation,
-          AUC ≈ 0.53) — it comes from interaction with the existing 17 features. The
-          baseline model has no customer-history baseline at all; the winning feature
-          answers &quot;is this unusual for this specific customer?&quot;, a question
-          the original 17 features literally could not ask. Recall at the default
-          threshold dipped slightly even as AUC rose — realizing the gain as fewer
-          missed cases would need threshold re-tuning on the augmented model. See{" "}
+          The gain is real but not from either feature alone (each near-random in
+          isolation, AUC ≈ 0.53) — it comes from interaction with the existing 7 base
+          features. The baseline model had no customer-history baseline at all; the
+          winning features answer &quot;is this unusual for this specific customer,
+          and have they been unusually active in the last 24h?&quot; — questions the
+          original 7 features literally could not ask. This version caught 21 more
+          fraud cases (384 → 405 of 600) at the same 0.5 decision threshold — a real
+          recall improvement, not just a ranking-quality (AUC) one. See{" "}
           <code className="rounded bg-white/10 px-1.5 py-0.5">FINDINGS.md</code> in the
-          repo for the full writeup, including the correction history.
+          repo for the full writeup, including the correction history and an earlier,
+          more conservative intermediate result this page used to show.
         </p>
       </section>
     </main>

@@ -107,21 +107,20 @@
   },
   "impact": {
     "candidateFeatures": [
-      "amount_sum_24h"
+      "amount_sum_24h",
+      "amount_vs_mean_ratio_safe"
     ],
-    "excludedLeakyFeatures": [
-      "amount_vs_mean_ratio"
-    ],
-    "baselineAuc": 0.8207139585422936,
-    "baselineRecall": 0.7066666666666667,
-    "baselineFalseNegatives": 176,
-    "augmentedAuc": 0.9163843488799732,
-    "augmentedRecall": 0.695,
-    "augmentedFalseNegatives": 183,
-    "aucDelta": 0.09567039033767966,
-    "recallDelta": -0.011666666666666714,
-    "nNewlyCaught": 57,
-    "nNewlyMissed": 64,
+    "excludedLeakyFeatures": [],
+    "baselineAuc": 0.8223,
+    "baselineRecall": 0.64,
+    "baselineFalseNegatives": 216,
+    "augmentedAuc": 0.9227,
+    "augmentedRecall": 0.675,
+    "augmentedFalseNegatives": 195,
+    "aucDelta": 0.1004,
+    "recallDelta": 0.035,
+    "nNewlyCaught": 21,
+    "nNewlyMissed": 0,
     "verdict": "IMPROVED"
   },
   "leakageCheck": {
