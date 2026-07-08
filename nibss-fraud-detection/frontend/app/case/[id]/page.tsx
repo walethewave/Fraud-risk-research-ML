@@ -31,7 +31,7 @@ export default async function CaseDetailPage({
         </div>
         <div className="flex gap-2">
           <RiskBadge level={riskLevel(fraudCase.fraudProbability)} />
-          <CaseTypeBadge caseType={fraudCase.caseType} />
+          <CaseTypeBadge caseType={fraudCase.caseType} predictedIsFraud={fraudCase.predictedIsFraud} />
         </div>
       </div>
 

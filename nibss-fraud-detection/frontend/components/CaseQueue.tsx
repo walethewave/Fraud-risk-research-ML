@@ -58,7 +58,7 @@ export function CaseQueue({ cases }: { cases: FraudCase[] }) {
               <th className="px-5 py-3 font-medium">Channel / Bank</th>
               <th className="px-5 py-3 font-medium">Confidence</th>
               <th className="px-5 py-3 font-medium">Risk</th>
-              <th className="px-5 py-3 font-medium">Outcome</th>
+              <th className="px-5 py-3 font-medium">Model got it right?</th>
             </tr>
           </thead>
           <tbody>
@@ -85,7 +85,7 @@ export function CaseQueue({ cases }: { cases: FraudCase[] }) {
                   <RiskBadge level={riskLevel(c.fraudProbability)} />
                 </td>
                 <td className="px-5 py-4">
-                  <CaseTypeBadge caseType={c.caseType} />
+                  <CaseTypeBadge caseType={c.caseType} predictedIsFraud={c.predictedIsFraud} />
                 </td>
               </tr>
             ))}
