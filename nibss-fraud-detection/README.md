@@ -69,7 +69,7 @@ nibss-fraud-detection/
 - **ATM Anomaly:** Fraudulent ATM transactions average ₦238,959 vs ₦34,143 for legitimate ones — a 600% amount differential signalling automated large-value withdrawal attacks.
 - **Geographic Concentration:** Abuja is the highest-risk state (0.328% fraud rate) with Sterling Bank showing a 3.6-fold risk variation across locations (Abuja: 0.470%, Rivers: 0.130%).
 - **Age Vulnerability:** Customers aged 40+ account for 40.8% of all fraud cases despite proportional population representation, suggesting targeted social engineering.
-- **Model Performance:** Random Forest achieves AUC-ROC of 0.822, outperforming Logistic Regression (0.702) by 17.1% relative improvement, detecting 64% of fraud cases with zero data leakage features.
+- **Model Performance:** Random Forest achieves AUC-ROC of 0.923, outperforming Logistic Regression (0.702) by 31.4% relative improvement, detecting 67.5% of fraud cases. Revised from an earlier 0.822 after a feature-discovery audit found the original feature selection had dropped a highly predictive feature and that a related candidate had look-ahead leakage — both fixed; see `feature_discovery/FINDINGS.md` for the full audit trail, including one residual leakage question (`composite_risk`) that couldn't be fully resolved.
 
 ---
 

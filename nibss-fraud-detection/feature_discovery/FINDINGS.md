@@ -9,6 +9,11 @@ leakage. This version corrects the record after a closer audit
 still substantial, just smaller and more carefully scoped than first
 reported.
 
+**Update — both errors fixed and the actual production notebooks
+retrained** (not just the isolated `feature_discovery/` test scripts).
+See "Production fix applied" near the bottom for the final, authoritative
+numbers — they're better than either number above.
+
 ## The pipeline
 
 1. `analyze_false_negatives.py` — compared 13 behavioral/velocity columns
@@ -97,3 +102,81 @@ Two lessons, not one:
    external review. Any automated "LLM proposes → test AUC" feature
    discovery loop needs this as an explicit pipeline step, not an
    afterthought.
+
+## Additional verification: is `amount_sum_24h` leaky too?
+
+Asked directly — the earlier check only eyeballed one customer's
+timeline. Verified rigorously by independently recomputing `amount_sum_24h`
+from scratch for all 1,000,000 rows (per-customer rolling 24h sum using
+only that customer's own timestamps and amounts, closed on both ends) and
+comparing to the stored column: **99.6% exact match** (996,182 / 1,000,000
+rows). The 0.4% mismatches go in *both* directions (stored sometimes
+higher, sometimes lower than recomputed) — consistent with rounding/window-
+boundary conventions, not systematic look-ahead (which would only ever
+push the stored value *up*). `amount_sum_24h` is genuinely clean.
+
+Also asked: why does a feature with near-zero raw correlation with
+`is_fraud` (r ≈ −0.0019) move AUC by +0.10? Because correlation only
+measures a *linear, single-column* relationship. `amount_sum_24h` alone
+tells you almost nothing — but paired with `amount`, a tree can split on
+"is this transaction large **relative to** what's already happened in the
+last 24h," a conditional signal no univariate check can see. This is the
+core reason the original feature-pruning step (62 → 17 features) discarded
+it: pruning by individual correlation/importance is blind to interaction-
+only value.
+
+## Production fix applied
+
+Both errors were fixed directly in the actual project notebooks (not just
+`feature_discovery/`'s isolated test scripts) and the production model was
+retrained:
+
+- **`notebooks/01_eda_analysis.ipynb`**: added a leak-safe replacement for
+  `amount_vs_mean_ratio` — a proper backward-only expanding mean per
+  customer (sorted by timestamp, excluding the current transaction),
+  saved as `amount_vs_mean_ratio_safe`. Added both `amount_sum_24h` and
+  `amount_vs_mean_ratio_safe` to the final feature set (7 base → 9 base,
+  + 10 bank one-hots = **19 total model inputs**, up from 17). Also
+  corrected two stale markdown cells that documented a feature list that
+  never actually matched what the code saved (a separate, smaller bug
+  found while fixing this).
+- **`notebooks/02_ml_modeling.ipynb`**: re-executed end-to-end on the
+  corrected 19-feature dataset. Also fixed the "Winner summary" cell,
+  which had hardcoded old AUC/recall numbers as literal text instead of
+  computing them from the trained model — it's now fully dynamic so it
+  can't go stale again on a future re-run.
+
+### Final retrained numbers (real, from the executed notebooks)
+
+| Model | AUC-ROC | Recall | Precision | Accuracy | Fraud caught | Missed |
+|---|---|---|---|---|---|---|
+| Logistic Regression (baseline) | 0.7020 | 54.7% | 0.88% | 81.35% | 328 / 600 | 272 |
+| Random Forest — **before this fix** (17 features) | 0.822 | 64.0% | 0.95% | 79.84% | 384 / 600 | 216 |
+| Random Forest — **after this fix** (19 features) | **0.9227** | **67.5%** | **7.08%** | **97.25%** | **405 / 600** | **195** |
+
+Compared to the pre-fix production model: **+0.10 AUC, +3.5 recall
+points, precision up ~7.4x (0.95% → 7.08%), false positives down from
+~40,098 to ~5,315.** This is better than either the uncorrected +0.13 or
+the intermediate +0.096 numbers reported earlier in this document, because
+the production retrain includes *both* fixed features together
+(`amount_sum_24h` clean, `amount_vs_mean_ratio_safe` leak-fixed rather
+than excluded), on the full pipeline rather than an isolated test.
+
+**Actual feature importance in the retrained model** (Gini):
+`amount_sum_24h` (0.359, now the single most important feature) >
+`amount` (0.263) > `amount_vs_mean_ratio_safe` (0.190) > `composite_risk`
+(0.084). The three new/relative-context features account for over 80% of
+the model's decisions combined.
+
+**What's still open:**
+- Recall improved this time (unlike the isolated `amount_sum_24h`-only
+  test, which saw recall dip slightly) — but threshold re-optimization
+  (`METHODOLOGY.md` 3.4.5/3.10.3) still hasn't been re-run on this model,
+  so there's likely more recall available at a better-tuned threshold.
+- `composite_risk` is unchanged, inherited from the raw dataset, and was
+  itself built using the original leaky `amount_vs_mean_ratio` — a small
+  residual leakage exposure may remain there that this fix could not
+  reach (its construction formula isn't available to us).
+- `explainability/` (the SHAP + Gemini pipeline) was built against the
+  old 17-feature model and needs to be re-run against this 19-feature one
+  — feature importances have changed substantially.
