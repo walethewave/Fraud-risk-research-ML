@@ -1,0 +1,142 @@
+{
+  "falseNegativeAnalysis": {
+    "nFalseNegatives": 216,
+    "nTruePositives": 384,
+    "nTrueNegatives": 159302,
+    "candidates": [
+      {
+        "feature": "amount_sum_24h",
+        "fnMean": 257193.17240740743,
+        "tpMean": 132429.90427083333,
+        "tnMean": 176411.0547068461,
+        "anomalyZ": 0.20533460627604774
+      },
+      {
+        "feature": "amount_vs_mean_ratio",
+        "fnMean": 1.244354239954285,
+        "tpMean": 0.7044963069144824,
+        "tnMean": 0.8484880668280373,
+        "anomalyZ": 0.20274329897165388
+      },
+      {
+        "feature": "velocity_score",
+        "fnMean": 2.3746970833733525,
+        "tpMean": 1.2112155397267996,
+        "tnMean": 1.7390827574606391,
+        "anomalyZ": 0.15831276864990115
+      },
+      {
+        "feature": "tx_count_24h",
+        "fnMean": 1.2268518518518519,
+        "tpMean": 1.1953125,
+        "tnMean": 1.2873410252225332,
+        "anomalyZ": -0.11300772353849739
+      },
+      {
+        "feature": "amount_mean_7d",
+        "fnMean": 164633.06240580906,
+        "tpMean": 129567.29582829034,
+        "tnMean": 145448.09366567805,
+        "anomalyZ": 0.0861813198499026
+      },
+      {
+        "feature": "online_channel_ratio",
+        "fnMean": 0.6967496517532107,
+        "tpMean": 0.6989755359130646,
+        "tnMean": 0.70044242693793,
+        "anomalyZ": -0.08126603388187068
+      },
+      {
+        "feature": "amount_mean_total",
+        "fnMean": 156551.9365564991,
+        "tpMean": 155944.1170635719,
+        "tnMean": 155092.2315496381,
+        "anomalyZ": 0.04563055074569932
+      },
+      {
+        "feature": "is_weekend",
+        "fnMean": 0.3055555555555556,
+        "tpMean": 0.3255208333333333,
+        "tnMean": 0.2853950358438689,
+        "anomalyZ": 0.04464205092734453
+      },
+      {
+        "feature": "channel_diversity",
+        "fnMean": 5.87962962962963,
+        "tpMean": 5.861979166666667,
+        "tnMean": 5.864841621574117,
+        "anomalyZ": 0.04310533015081085
+      },
+      {
+        "feature": "amount_std_total",
+        "fnMean": 291915.69619603694,
+        "tpMean": 294496.4224311135,
+        "tnMean": 286930.5358689216,
+        "anomalyZ": 0.03530908252446707
+      },
+      {
+        "feature": "tx_count_total",
+        "fnMean": 101.19444444444444,
+        "tpMean": 99.8359375,
+        "tnMean": 100.97288797378565,
+        "anomalyZ": 0.022352284860480874
+      },
+      {
+        "feature": "amount_std_7d",
+        "fnMean": 107733.3286530216,
+        "tpMean": 88248.29835884714,
+        "tnMean": 110782.3784590308,
+        "anomalyZ": -0.014069149909681696
+      },
+      {
+        "feature": "is_peak_hour",
+        "fnMean": 0.46296296296296297,
+        "tpMean": 0.5104166666666666,
+        "tnMean": 0.46307642088611567,
+        "anomalyZ": -0.00022753640608933533
+      }
+    ]
+  },
+  "llmProposal": {
+    "modelUsed": "gemini-2.5-flash-lite",
+    "rawResponse": "FEATURE: amount_sum_24h\nREASONING: This feature has the largest positive z-score (+0.21), indicating that missed fraud transactions have a significantly higher average sum in the last 24 hours compared to legitimate transactions, and a substantially higher average than caught fraud transactions.\nCONFIDENCE: Medium\n\nFEATURE: amount_vs_mean_ratio\nREASONING: With the second-highest positive z-score (+0.20), this feature suggests that missed fraud transactions tend to be proportionally larger than their historical average, differing more from the mean of legitimate transactions than caught fraud.\nCONFIDENCE: Medium",
+    "recommendedFeatures": [
+      "amount_sum_24h",
+      "amount_vs_mean_ratio"
+    ]
+  },
+  "impact": {
+    "candidateFeatures": [
+      "amount_sum_24h",
+      "amount_vs_mean_ratio_safe"
+    ],
+    "excludedLeakyFeatures": [],
+    "baselineAuc": 0.8223,
+    "baselineRecall": 0.64,
+    "baselineFalseNegatives": 216,
+    "augmentedAuc": 0.9227,
+    "augmentedRecall": 0.675,
+    "augmentedFalseNegatives": 195,
+    "aucDelta": 0.1004,
+    "recallDelta": 0.035,
+    "nNewlyCaught": 21,
+    "nNewlyMissed": 0,
+    "verdict": "IMPROVED"
+  },
+  "leakageCheck": {
+    "leakyColumns": [
+      "amount_mean_total"
+    ],
+    "cleanColumns": [
+      "amount_mean_7d",
+      "amount_sum_24h",
+      "tx_count_24h"
+    ],
+    "compositeRiskCorrelation": {
+      "amount_vs_mean_ratio": 0.5352302840413046,
+      "velocity_score": 0.3797921525966184,
+      "amount_sum_24h": 0.46453212869826777
+    },
+    "conclusion": "amount_mean_total is a customer-lifetime aggregate that is constant across all of a customer's transactions, including ones that occur after the transaction being scored \u2014 this is temporal (look-ahead) leakage, contradicting METHODOLOGY.md's claim that all aggregates use look-back-only windows. amount_vs_mean_ratio (= amount / amount_mean_total) inherits this leakage. amount_mean_7d, amount_sum_24h, and tx_count_24h were verified as genuine backward-looking windows and are NOT leaky. composite_risk, already in the deployed model, correlates 0.54 with the leaky ratio and 0.46 with the clean amount_sum_24h \u2014 meaning the original model has some diluted exposure to this same leakage via composite_risk, not newly introduced by this experiment."
+  }
+}

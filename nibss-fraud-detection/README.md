@@ -40,6 +40,22 @@ nibss-fraud-detection/
 │   └── .gitkeep                ← saved model artifacts go here
 ├── outputs/
 │   └── .gitkeep                ← plots, reports, exported visualisations
+├── explainability/              ← SHAP + Gemini fraud explanation pipeline
+│   ├── design.md                ← research question, prompt schema, metrics
+│   ├── compute_shap.py           ← offline SHAP values for the RF model
+│   ├── prompt_builder.py         ← builds the analyst-facing prompt
+│   ├── llm_client.py             ← Gemini client with model fallback chain
+│   ├── generate_explanations.py  ← batch-generates explanations (resumable)
+│   ├── evaluate.py               ← faithfulness + usefulness scoring
+│   ├── human_rating_template.py  ← exports blind human-rating sheet
+│   └── export_frontend_data.py   ← exports cases for the frontend below
+├── feature_discovery/           ← LLM-assisted feature discovery + leakage audit
+│   ├── FINDINGS.md               ← full audit trail: what was found, fixed, still open
+│   ├── analyze_false_negatives.py
+│   ├── propose_features.py
+│   ├── leakage_check.py          ← temporal-leakage audit (added after review)
+│   └── test_feature_impact.py
+├── frontend/                    ← Next.js triage dashboard (see its README)
 ├── requirements.txt
 └── README.md
 ```
@@ -67,7 +83,42 @@ nibss-fraud-detection/
 - **ATM Anomaly:** Fraudulent ATM transactions average ₦238,959 vs ₦34,143 for legitimate ones — a 600% amount differential signalling automated large-value withdrawal attacks.
 - **Geographic Concentration:** Abuja is the highest-risk state (0.328% fraud rate) with Sterling Bank showing a 3.6-fold risk variation across locations (Abuja: 0.470%, Rivers: 0.130%).
 - **Age Vulnerability:** Customers aged 40+ account for 40.8% of all fraud cases despite proportional population representation, suggesting targeted social engineering.
-- **Model Performance:** Random Forest achieves AUC-ROC of 0.822, outperforming Logistic Regression (0.702) by 17.1% relative improvement, detecting 64% of fraud cases with zero data leakage features.
+- **Model Performance:** Random Forest achieves AUC-ROC of 0.923, outperforming Logistic Regression (0.702) by 31.4% relative improvement, detecting 67.5% of fraud cases. Revised from an earlier 0.822 after a feature-discovery audit found the original feature selection had dropped a highly predictive feature and that a related candidate had look-ahead leakage — both fixed; see `feature_discovery/FINDINGS.md` for the full audit trail, including one residual leakage question (`composite_risk`) that couldn't be fully resolved.
+
+---
+
+## Model Performance — Before / After Feature-Discovery Fix
+
+The original model used 7 base features. A closed-loop audit (analyze
+missed fraud → LLM proposes candidate features → empirically test AUC →
+audit for leakage, see `feature_discovery/FINDINGS.md`) found the pruning
+step had discarded a highly predictive feature (`amount_sum_24h`) and that
+a related candidate (`amount_vs_mean_ratio`) had look-ahead leakage in its
+source column. Both fixed; model retrained on 9 base features (+10 bank
+one-hots = 19 total).
+
+| Metric | Before (17 features) | After (19 features) |
+|---|---|---|
+| AUC-ROC | 0.822 | **0.923** |
+| Recall | 64.0% (384/600 fraud caught) | **67.5%** (405/600 fraud caught) |
+| Precision | 0.95% | **7.08%** |
+| Accuracy | 79.84% | **97.25%** |
+| False positives (of 200,000 test txns) | ~40,098 | **~5,315** |
+
+Note on why this worked despite both new features having very low raw
+correlation with `is_fraud` (`amount_sum_24h`: −0.0019, `amount_vs_mean_ratio_safe`:
+0.031): correlation only measures a single-column, linear relationship. A
+Random Forest can combine features non-linearly — e.g. "large amount **and**
+high recent 24h activity **and** unusual relative to this customer's own
+history" — a conditional signal invisible to any one-column correlation
+check. Fraud transactions average a `amount_vs_mean_ratio_safe` of 3.32
+(over 3x their own typical amount) vs 1.27 for legitimate transactions —
+a real, substantial difference the correlation coefficient alone
+understates.
+
+**Open item:** `composite_risk`, unchanged from the raw dataset, was
+itself constructed upstream using the original leaky ratio — a small
+residual leakage exposure may remain there that this fix could not reach.
 
 ---
 

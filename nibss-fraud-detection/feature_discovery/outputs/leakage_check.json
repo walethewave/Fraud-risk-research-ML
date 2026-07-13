@@ -1,0 +1,24 @@
+{
+  "customer_checked": "CUST_22A67E5D",
+  "n_transactions_checked": 140,
+  "is_lifetime_constant": {
+    "amount_mean_total": true,
+    "amount_mean_7d": false,
+    "amount_sum_24h": false,
+    "tx_count_24h": false
+  },
+  "leaky_columns": [
+    "amount_mean_total"
+  ],
+  "clean_columns": [
+    "amount_mean_7d",
+    "amount_sum_24h",
+    "tx_count_24h"
+  ],
+  "composite_risk_correlation": {
+    "amount_vs_mean_ratio": 0.5352302840413046,
+    "velocity_score": 0.3797921525966184,
+    "amount_sum_24h": 0.46453212869826777
+  },
+  "conclusion": "amount_mean_total is a customer-lifetime aggregate that is constant across all of a customer's transactions, including ones that occur after the transaction being scored \u2014 this is temporal (look-ahead) leakage, contradicting METHODOLOGY.md's claim that all aggregates use look-back-only windows. amount_vs_mean_ratio (= amount / amount_mean_total) inherits this leakage. amount_mean_7d, amount_sum_24h, and tx_count_24h were verified as genuine backward-looking windows and are NOT leaky. composite_risk, already in the deployed model, correlates 0.54 with the leaky ratio and 0.46 with the clean amount_sum_24h \u2014 meaning the original model has some diluted exposure to this same leakage via composite_risk, not newly introduced by this experiment."
+}
