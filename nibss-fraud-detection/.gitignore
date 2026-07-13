@@ -11,3 +11,11 @@ models/*
 # Ignore all jupyter checkpoints
 .ipynb_checkpoints/
 */.ipynb_checkpoints/*
+
+# Secrets
+.env
+explainability/.env
+*.env
+
+# Virtual environment
+.venv/
