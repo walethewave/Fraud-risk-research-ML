@@ -7,7 +7,7 @@
 
 📄 **[Fraud Detection in Nigerian Banking: Temporal, Behavioral, and Geographic Patterns in One Million Transactions](https://drive.google.com/file/d/1mN2d2bi-nVqAhlVMA0JXdGBZg8xO6OlR/view?usp=sharing)**
 
-> **Note:** the paper reports the corrected Random Forest result (AUC-ROC 0.923) from a later feature-discovery audit that isn't merged into this branch yet — see `main`'s numbers below vs. the `feature-discovery` branch, which has the retrained model, the audit trail, and the code behind the paper's Section 3.6.
+The paper's headline result (Random Forest AUC-ROC 0.923) matches this branch — see `feature_discovery/FINDINGS.md` for the full audit trail behind the paper's Section 3.6.
 
 ---
 
