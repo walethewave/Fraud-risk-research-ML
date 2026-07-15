@@ -1,6 +1,14 @@
 # Fighting Fraud with Machine Learning  
 **Building interpretable AI systems for real-time payment fraud detection**
 
+> 📄 **This project now has a full research paper, a SHAP + LLM explainability
+> pipeline, an LLM-assisted feature-discovery audit, and a live triage
+> dashboard** — all in [`nibss-fraud-detection/`](nibss-fraud-detection/).
+> This top-level README is the original project narrative; the numbers below
+> reflect the corrected model (see
+> [`nibss-fraud-detection/feature_discovery/FINDINGS.md`](nibss-fraud-detection/feature_discovery/FINDINGS.md)
+> for the full audit trail) but the deeper docs live in that subfolder.
+
 ## What This Is
 I'm building production-ready fraud detection models for large-scale interbank payment systems. This isn't a Kaggle competition or a toy project—it's the messy, iterative work of understanding fraud as an adversarial system that learns and adapts.
 
@@ -51,8 +59,8 @@ Features aren't data columns. Features are hypotheses about fraud behavior encod
 - **Risk composites** - Weighted combinations of amount deviation, velocity, and diversity
 - **One-hot bank encodings** - Bank-specific fraud patterns (using int8 for memory efficiency)
 
-**What I Dropped (45 features):**  
-Started with 62 features. Aggressively pruned low-signal noise. Kept 17 predictors that actually matter. More features ≠ better models. More features = more ways to overfit.
+**What I Dropped (and later un-dropped):**  
+Started with 62 features. Aggressively pruned low-signal noise, down to 7 predictors. Turns out I pruned too aggressively — a later feature-discovery audit found I'd dropped a highly predictive feature (`amount_sum_24h`) purely because it looked weak in isolation, and that a related feature had look-ahead leakage. Both fixed; the model now runs on 9 base predictors + 10 bank encodings = 19 total. More features ≠ better models, but neither does pruning by univariate correlation alone — it's blind to interaction effects. Full story in [`feature_discovery/FINDINGS.md`](nibss-fraud-detection/feature_discovery/FINDINGS.md).
 
 **Engineering Philosophy:**  
 Every feature answers: *"How weird is this transaction for this user?"*  
@@ -84,9 +92,9 @@ Not "Is this transaction big?" but "Is this bigger than what this user normally 
 Started here because you need to know what "simple" performance looks like. Logistic Regression with `class_weight='balanced'` gave us a baseline to beat.
 
 **The ugly truth:**
-- Caught 54.2% of fraud (missed 46%)
+- Caught 54.7% of fraud (missed 45%)
 - 99.1% false positive rate at default threshold
-- Precision: 0.87% (for every real fraud, 113 false alarms)
+- Precision: 0.88% (for every real fraud, ~113 false alarms)
 - Unusable in production
 
 **What it taught us:**  
@@ -95,7 +103,7 @@ Linear models struggle with fraud's non-linear decision boundaries. Time to brin
 ---
 
 ### Production Model: Random Forest
-**AUC-ROC: 0.8223 (+17% improvement)**
+**AUC-ROC: 0.9227 (+31% improvement over Logistic Regression)**
 
 **Configuration:**
 ```python
@@ -109,11 +117,17 @@ RandomForestClassifier(
 )
 ```
 
-**Performance:**
-- **Recall: 64%** - Catches nearly 2 out of 3 fraud cases
-- **AUC-ROC: 0.8223** - "Good" discrimination (industry-standard metric)
-- **384 true positives** vs LR's 325 (+59 fraud cases caught)
-- Trade-off: 3,125 more false positives, but catching more fraud
+**Performance (post feature-discovery fix):**
+- **Recall: 67.5%** - Catches 2 out of 3 fraud cases
+- **AUC-ROC: 0.9227** - "Excellent" discrimination (industry-standard metric)
+- **Precision: 7.08%** - up nearly 8x from the pre-fix model's 0.95%
+- **405 true positives** vs LR's 328 (+77 fraud cases caught)
+- **False positives cut by 86%**: ~5,313 vs the pre-fix model's ~40,098
+
+This wasn't a hyperparameter win — it came from fixing a feature-selection
+mistake (see "What I Dropped" above). The original version of this model
+scored AUC-ROC 0.8223, 64% recall. Same architecture, same hyperparameters,
+better inputs.
 
 **Why Random Forest?**
 1. Handles non-linear patterns (fraud doesn't follow straight lines)
@@ -127,11 +141,18 @@ RandomForestClassifier(
 ### Interpretability: SHAP Analysis
 Built SHAP (SHapley Additive exPlanations) analysis because "the model says so" doesn't fly with fraud analysts or regulators.
 
-**What SHAP revealed:**
-- **Transaction amount** dominates (52% importance) - Size matters most
-- **Composite risk score** second (18%) - Our engineered feature works
-- **Month and temporal features** (9%) - Seasonal fraud patterns confirmed
-- **Bank encodings** matter differently - Institution-specific risk profiles
+**What the (corrected) model's feature importance revealed:**
+- **`amount_sum_24h`** dominates (35.9% importance) - the reinstated feature is now the single biggest driver
+- **Transaction amount** second (26.3%) - still matters, just no longer alone
+- **`amount_vs_mean_ratio_safe`** third (19.0%) - "is this unusual for this customer specifically" turned out to be a bigger signal than raw amount deviation alone
+- **Composite risk score** fourth (8.4%), month fifth (4.3%)
+- **Bank encodings** matter differently - institution-specific risk profiles
+
+The two features added by the feature-discovery fix now account for 55% of
+total model importance — more than transaction amount ever did on its own.
+Also built a full SHAP + Gemini pipeline that turns these per-transaction
+SHAP values into plain-English explanations for fraud analysts — see
+[`explainability/`](nibss-fraud-detection/explainability/).
 
 **Visualization Suite:**
 - Summary plots (global feature impact)
@@ -155,8 +176,11 @@ nibss-fraud-detection/
 │   └── 02_ml_modeling.ipynb    ← Machine Learning Modeling (LR + RF) and evaluation
 ├── models/                     ← Saved model artifacts (.pkl files)
 ├── outputs/                    ← Generated evaluation plots and visualisations
+├── explainability/              ← SHAP + Gemini pipeline: turns predictions into plain-English explanations
+├── feature_discovery/           ← The audit that found and fixed the feature-selection + leakage issues
+├── frontend/                    ← Next.js triage dashboard (live demo of the explainability pipeline)
 ├── requirements.txt            ← Project dependencies
-└── README.md                   ← Refactored project documentation
+└── README.md                   ← Full project documentation (more detail than this file)
 ```
 
 **Code Quality:**
@@ -170,6 +194,10 @@ nibss-fraud-detection/
 
 ## What's Next
 
+**Since this was originally written, done:** feature-discovery audit (found
+and fixed the AUC 0.82→0.92 issue), the explainability dashboard, and a
+research paper. Still open below.
+
 **Immediate improvements (in priority order):**
 1. **Threshold optimization** - Find the precision/recall sweet spot for business needs
 2. **Hyperparameter tuning** - RandomizedSearchCV to push AUC to 0.85+
@@ -182,7 +210,6 @@ nibss-fraud-detection/
 - Real-time inference pipeline (FastAPI or similar)
 - Monitoring for model drift and adversarial adaptation
 - A/B testing framework for safe deployment
-- Explainability dashboard for fraud analysts
 
 ---
 
